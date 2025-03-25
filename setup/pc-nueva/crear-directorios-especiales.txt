@@ -1,0 +1,9 @@
+ln -s /media/neocronos/home/neocronos/Vídeos/ ~/Videos
+ln -s /media/neocronos/home/neocronos/Música/ ~/Música
+ln -s /media/neocronos/home/neocronos/Imágenes/ ~/Imágenes
+ln -s /media/neocronos/home/neocronos/Descargas/ ~/Descargas
+ln -s /media/neocronos/home/neocronos/Público/ ~/Público
+ln -s /media/neocronos/home/neocronos/Plantillas/ ~/Plantillas
+ln -s /media/neocronos/home/neocronos/Backup/ ~/Backup
+ln -s /media/neocronos/home/neocronos/retroarch/ ~/retroarch
+

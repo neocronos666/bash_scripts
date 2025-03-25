@@ -1,0 +1,125 @@
+
+#!/bin/bash
+clear
+# Colores para una salida más elegante
+RED="\e[31m"
+GREEN="\e[32m"
+CYAN="\e[36m"
+YELLOW="\e[33m"
+NC="\e[0m"
+# Directorio base donde están los scripts
+BASE_DIR="/home/neocronos/Documentos/bash_scripts"
+
+# Función para mostrar el menú
+mostrar_menu() {
+    clear
+    echo " 🔰             "
+    echo -e "${CYAN}    ╭───────────────────────────────────────────────────────╮"
+    echo -e "${CYAN}    │        🖳 ${NC} COMANDOS INTERACTIVOS RAPIDOS ${CYAN}              │"  
+    echo -e "${CYAN}    ╰──╥────────────────────────────────────────────────────╯"
+    echo -e "${CYAN}       ║ ${GREEN}⛶ Directorio:${NC}$BASE_DIR"
+    echo -e "${CYAN}       ╙───────────────────────────────────────────────╾"                        
+    
+    # Listar scripts en el directorio principal
+    echo -e "    ${NC}📝 Scripts disponibles:"
+    SCRIPTS=($(find "$BASE_DIR" -maxdepth 1 -type f -name "*.sh" | sort))
+    for i in "${!SCRIPTS[@]}"; do
+        echo -e "         ${YELLOW}[$((i+1))]${RED} $(basename "${SCRIPTS[i]}")"
+    done
+
+    # Listar subdirectorios
+    echo ""
+    echo -e "    ${NC}📁 Directorios disponibles:"
+    DIRS=($(find "$BASE_DIR" -maxdepth 1 -type d ! -path "$BASE_DIR" -not -name ".*"| sort))
+    for i in "${!DIRS[@]}"; do
+        echo -e "         ${YELLOW}[d$((i+1))]${GREEN}$(basename "${DIRS[i]}")/${NC}"
+    done
+
+    echo ""
+    echo -e "         ${YELLOW}[*] ${RED}⮹${NC} volver\n"   
+    echo -e "         ${YELLOW}[0] ${RED}⮿${NC} Salir"   
+    echo -e "${CYAN}    ╼─┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈─╾${YELLOW}\n"
+}
+
+# Función para ejecutar un script
+ejecutar_script() {
+    local script="${SCRIPTS[$1]}"
+    if [[ -x "$script" ]]; then
+        echo "▶  Ejecutando: $(basename "$script")..."
+        bash "$script"
+    else
+        echo "⚠ El script no tiene permisos de ejecución.\n"
+        chmod +x "$script"
+        echo "\n✔ Permisos otorgados con exito"
+        bash "$script"
+    fi
+    read -p "⏳ (continuar)"
+}
+
+# Función para explorar un directorio
+explorar_directorio() {
+    local dir="${DIRS[$1]}"
+    cd "$dir" || return
+    BASE_DIR="$dir"
+}
+
+
+
+# Loop del menú
+while true; do
+    mostrar_menu
+    #read -p "⭕ Selecciona una opción: " opcion
+    #sudo echo -e "${YELLOW} 🔹 Shell:${NC} $PS1"
+    #read -p "⭕ $PS1 " opcion
+    #PS1V=$(echo $PS1)
+    #echo "$(env | grep '^PS1=' | sed 's/^PS1=//')"
+    #PS1V=$(env | grep '^PS1=' | sed 's/^PS1=//')
+    read -p "   🗿$USER⭕ " opcion
+
+
+    # Salir
+    if [[ "$opcion" == "0" ]]; then
+        clear
+        echo -e "   ⚬"
+        sleep 0.1
+        clear
+        echo -e "   ⚭ ${GREEN} Que"
+        sleep 0.1
+        clear
+        echo -e "   ⚮ ${CYAN} Que tenga"
+        sleep 0.1
+        clear
+        echo -e "   ⚯ ${NC} Que tenga un buen "
+        sleep 0.1
+        clear
+        echo -e "   ✳️ ${YELLOW} Que tenga un buen dia!!!"        
+        exit 0
+    fi
+#----------
+  # Ejecutar un script
+if [[ "$opcion" =~ ^[0-9]+$ ]] && (( opcion >= 1 && opcion <= ${#SCRIPTS[@]} )); then
+    ejecutar_script $((opcion-1))
+    
+# Explorar un directorio
+elif [[ "$opcion" =~ ^d[0-9]+$ ]]; then
+    num=${opcion:1} # Extrae el número después de "d"
+    if (( num >= 1 && num <= ${#DIRS[@]} )); then
+        explorar_directorio $((num-1))
+    fi
+
+# Subir un nivel en el directorio
+elif [[ "$opcion" == "*" ]]; then
+    cd "$BASE_DIR/.." || return
+    BASE_DIR=$(pwd) # Actualiza BASE_DIR al nivel superior
+# Manejar entradas no válidas o desconocidas
+else
+    # echo -e "${RED}⚠ Error: Opción no válida: '$opcion'${NC}"
+    # read -p "✳️ (Presiona Enter para continuar)"
+    clear 
+    echo -e " ${GREEN}  ▶   ${NC}$opcion\n" 
+    $opcion 
+    read -p "✳️ (continuar)"
+fi
+
+done
+

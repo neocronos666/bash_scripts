@@ -1,0 +1,36 @@
+#!/bin/bash
+# Colores para una salida más elegante
+RED="\e[31m"
+GREEN="\e[32m"
+CYAN="\e[36m"
+YELLOW="\e[33m"
+NC="\e[0m"
+clear
+
+🈴
+👤
+📈
+🖳
+
+
+#TITULO
+    echo -e "🔰              "
+    echo -e "${CYAN}_______________ 🖧 ${NC} Información de Red en Linux 🖳${CYAN}___________\n"
+    echo -e "${GREEN}    📂 Directorio:${NC}$BASE_DIR"
+    echo -e "${CYAN}____________________________________________________________\n"
+
+
+#MENU
+   echo -e "         ${YELLOW}[1]${RED} git init ${NC} - ${GREEN}Inicializa un nuevo repositorio Git"
+
+#OPCIONES DE MENU
+    echo -e "\n    ${YELLOW}[0] ◀️ Volver\n"
+    
+    read -p "⭕ Selecciona una opción: " opcion
+   
+    echo -e "${YELLOW}✳️ (continuar)"
+
+#CIERRE
+    echo -e "${CYAN}    ________________________________________________________${YELLOW}\n"
+
+

@@ -1,0 +1,1 @@
+Binwalk nombre archivo
