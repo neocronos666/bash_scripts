@@ -36,9 +36,9 @@ mostrar_menu() {
     done
 
     echo ""
-    echo -e "         ${YELLOW}[*] ${RED}⮹${NC} volver\n"   
+    echo -e "         ${YELLOW}[*] ${RED}⮹${NC} volver"   
     echo -e "         ${YELLOW}[0] ${RED}⮿${NC} Salir"   
-    echo -e "${CYAN}    ╼─┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈─╾${YELLOW}\n"
+    echo -e "${CYAN}    ╼─┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈─╾${YELLOW}"
 }
 
 # Función para ejecutar un script
