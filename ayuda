@@ -13,8 +13,8 @@ BASE_DIR="/home/neocronos/Documentos/bash_scripts"
 # Función para mostrar el menú
 mostrar_menu() {
     clear
-    echo " 🔰             "
-    echo -e "${CYAN}    ╭───────────────────────────────────────────────────────╮"
+    echo "             "
+    echo -e "${CYAN}🔰  ╭───────────────────────────────────────────────────────╮"
     echo -e "${CYAN}    │        🖳 ${NC} COMANDOS INTERACTIVOS RAPIDOS ${CYAN}              │"  
     echo -e "${CYAN}    ╰──╥────────────────────────────────────────────────────╯"
     echo -e "${CYAN}       ║ ${GREEN}⛶ Directorio:${NC}$BASE_DIR"
@@ -26,6 +26,7 @@ mostrar_menu() {
     for i in "${!SCRIPTS[@]}"; do
         echo -e "         ${YELLOW}[$((i+1))]${RED} $(basename "${SCRIPTS[i]}")"
     done
+    echo -e "         ${YELLOW}[w]${CYAN} Informacion de Clima⛅"   
 
     # Listar subdirectorios
     echo ""
@@ -34,8 +35,7 @@ mostrar_menu() {
     for i in "${!DIRS[@]}"; do
         echo -e "         ${YELLOW}[d$((i+1))]${GREEN}$(basename "${DIRS[i]}")/${NC}"
     done
-
-    echo ""
+    echo ""    
     echo -e "         ${YELLOW}[*] ${RED}⮹${NC} volver"   
     echo -e "         ${YELLOW}[0] ${RED}⮿${NC} Salir"   
     echo -e "${CYAN}    ╼─┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈─╾${YELLOW}"
@@ -107,11 +107,15 @@ elif [[ "$opcion" =~ ^d[0-9]+$ ]]; then
         explorar_directorio $((num-1))
     fi
 
+
 # Subir un nivel en el directorio
 elif [[ "$opcion" == "*" ]]; then
     cd "$BASE_DIR/.." || return
     BASE_DIR=$(pwd) # Actualiza BASE_DIR al nivel superior
 # Manejar entradas no válidas o desconocidas
+elif [[ "$opcion" == "w" ]]; then
+    curl wttr.in
+    read -p "✳️ (continuar)"
 else
     # echo -e "${RED}⚠ Error: Opción no válida: '$opcion'${NC}"
     # read -p "✳️ (Presiona Enter para continuar)"

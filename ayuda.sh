@@ -10,7 +10,7 @@ CYAN='\e[36m'
 RESET='\e[0m'
 
 # Archivo a mostrar
-README_FILE="/home/neocronos/Documentos/bash_scripts/README.md
+README_FILE="/home/neocronos/Documentos/bash_scripts/README.md"
 
 #README_FILE="${BASE_DIR}/README.md"
 #BASE_DIR=$(grep '^BASE_DIR=' ayuda | cut -d'=' -f2)
