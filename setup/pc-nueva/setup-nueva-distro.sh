@@ -23,14 +23,14 @@ source ~/.bashrc
 conda update -n base -c defaults conda
 
 # Crea un entorno Conda para TensorFlow
-conda create -n tensorflow_env python=3.8 -y
+#conda create -n tensorflow_env python=3.8 -y
 
 # Activa el entorno
-source ~/.bashrc
-conda activate tensorflow_env
+#source ~/.bashrc
+#conda activate tensorflow_env
 
 # Instala TensorFlow en el entorno
-pip install tensorflow
+#pip install tensorflow
 
 # Instala Visual Studio Code
 sudo apt-get install -y software-properties-common apt-transport-https
@@ -38,4 +38,30 @@ wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add
 sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
 sudo apt-get update
 sudo apt-get install -y code
+
+# -----Paquetes Necesarios
+
+#Para Bajar youtube y reproducir video
+sudo apt install -y yt-dlp ffmpeg
+    #Necesario para leer las cookies 
+pip install --upgrade browser-cookie3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

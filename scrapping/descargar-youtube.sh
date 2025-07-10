@@ -1,35 +1,87 @@
 #!/bin/bash
+clear
+# 🎨 Colores
+RED="\e[31m"
+GREEN="\e[32m"
+CYAN="\e[36m"
+YELLOW="\e[33m"
+NC="\e[0m"
+WHITE="\e[97m"
 
-DESTINO="$HOME/Descargas"
+# 📁 Carpeta destino
+DESTINO="$HOME/Descargas/scrapped/yt"
 mkdir -p "$DESTINO"
 
-echo -e "\n¿Qué querés descargar?"
-echo "[1] Solo audio (MP3)"
-echo "[2] Video con audio (calidad seleccionable)"
-read -p "Opción: " OPCION
+# 📌 Título
+clear
 
-read -p "Pegá la URL del video: " URL
 
-# Detectar título para nombre base
-NOMBRE_BASE=$(yt-dlp --cookies-from-browser chrome --get-title "$URL" | tr -cd '[:alnum:]._-')
-NOMBRE_BASE=${NOMBRE_BASE:0:50}
+echo -e "${RED}"
+echo "           ███████████████████████████           "
+echo "      ███████████████████████████████████       "
+echo "   █████████████████████████████████████████    "
+echo " █████████████████████████████████████████████  "
+echo "███████████████████████████████████████████████ "
+echo "██████████████                         █████████"
+echo -e "████████████            ${WHITE}/\\             ${RED}███████████"
+echo -e "███████████            ${WHITE}/  \\             ${RED}██████████"
+echo -e "██████████            ${WHITE}/____\\           ${RED}█████████"
+echo "████████████                         ███████████"
+echo " ██████████████████████████████████████████████ "
+echo "  ████████████████████████████████████████████  "
+echo "    ████████████████████████████████████████    "
+echo "      ████████████████████████████████████      "
+echo -e "          ${NC}"
 
-# Mostrar formatos si es video
-if [[ "$OPCION" == "2" ]]; then
-    echo -e "\n📦 Formatos disponibles:\n"
-    yt-dlp --cookies-from-browser chrome -F "$URL"
-    echo -e "\nElegí el formato de video+audio (por ejemplo 18 o 135+140):"
-    read -p "Formato: " FORMATO
 
-    yt-dlp --cookies-from-browser chrome -f "$FORMATO" -o "$DESTINO/${NOMBRE_BASE}.%(ext)s" "$URL"
-    echo -e "\n✅ Video descargado en: $DESTINO"
+echo -e "${CYAN}🎬 Descargador de YouTube con yt-dlp + cookies de Chrome${NC}"
+echo -e "${YELLOW}----------------------------------------------------${NC}"
 
-elif [[ "$OPCION" == "1" ]]; then
-    yt-dlp --cookies-from-browser chrome --extract-audio --audio-format mp3 \
-        -o "$DESTINO/${NOMBRE_BASE}.mp3" "$URL"
-    echo -e "\n✅ MP3 descargado en: $DESTINO"
-else
-    echo "❌ Opción inválida."
+# ❓ Opción
+echo -e "${CYAN}¿Qué querés descargar?${NC}"
+echo -e "  [0] ❌ Volver"
+echo -e "  [1] 🎵 Solo audio (${GREEN}MP3${NC})"
+echo -e "  [2] 📹 Video y/o audio (${GREEN}todos los formatos${NC})"
+read -p "   🗿$USER⭕ " OPCION
+
+if [[ "$OPCION" != "1" && "$OPCION" != "2" ]]; then    
     exit 1
 fi
+
+# 🔗 URL
+read -p "🔗 Pegá la URL del video: " URL
+
+# 🏷️ Nombre base
+echo -e "${CYAN}⏳ Detectando título del video...${NC}"
+NOMBRE_BASE=$(yt-dlp --cookies-from-browser chrome --get-title "$URL" | tr -cd '[:alnum:]._-')
+NOMBRE_BASE=${NOMBRE_BASE:0:50}
+echo -e "${GREEN}✔ Nombre base detectado:${NC} $NOMBRE_BASE"
+
+# 🚀 Operación según opción
+if [[ "$OPCION" == "2" ]]; then
+    echo -e "${CYAN}\n📦 Formatos disponibles:\n${NC}"
+    yt-dlp --cookies-from-browser chrome -F "$URL"
+
+    echo -e "${YELLOW}🎯 Elegí el formato de video+audio (ej: 18, 135+140):${NC}"
+    read -p "Formato: " FORMATO
+
+    echo -e "${CYAN}⬇ Descargando video en $DESTINO...${NC}"
+    yt-dlp --cookies-from-browser chrome -f "$FORMATO" -o "$DESTINO/${NOMBRE_BASE}.%(ext)s" "$URL"
+
+    echo -e "${GREEN}✅ Video descargado correctamente.${NC}"
+
+elif [[ "$OPCION" == "1" ]]; then
+    echo -e "${CYAN}⬇ Descargando audio en MP3...${NC}"
+    yt-dlp --cookies-from-browser chrome --extract-audio --audio-format mp3 \
+        -o "$DESTINO/${NOMBRE_BASE}.mp3" "$URL"
+
+    echo -e "${GREEN}✅ Audio MP3 descargado correctamente.${NC}"
+elif [[ "$OPCION" == "0" ]]; then
+    exit 1
+else
+    echo -e "${RED}❌ Opción inválida. Abortando.${NC}"
+    exit 1
+fi
+
+echo -e "${YELLOW}📁 Archivos guardados en:${NC} $DESTINO"
 

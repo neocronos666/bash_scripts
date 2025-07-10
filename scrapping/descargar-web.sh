@@ -16,7 +16,7 @@ fi
 URL=$(echo "$1" | xargs)
 
 # Nombre de la carpeta de salida
-CARPETA_SALIDA="sitio_descargado"
+CARPETA_SALIDA="$HOME/Descargas/scrapped/web"
 
 # Mensaje de inicio
 echo -e "\n===== 🌐 Descargando el sitio: $URL =====\n"
