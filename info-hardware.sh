@@ -4,8 +4,92 @@ RED="\e[31m"
 GREEN="\e[32m"
 CYAN="\e[36m"
 YELLOW="\e[33m"
+PURPLE="\e[35m"
+BLUE="\e[34m"
 NC="\e[0m"
 clear
+
+
+#-----------------FUNCIONES--------------------------------
+# Función para obtener información de RAM con sudo
+get_ram_info() {
+    # Verificar si ya tenemos permisos sudo
+    if [ "$(id -u)" -ne 0 ]; then
+        echo -e "${YELLOW}🔐 Se requieren privilegios sudo para leer información detallada de RAM${NC}"
+        if sudo -n true 2>/dev/null; then
+            echo -e "${GREEN}✔ Sudo disponible${NC}"
+        else
+            sudo echo -e "${GREEN}✔ Permisos obtenidos${NC}" >/dev/null
+        fi
+    fi
+
+    # Obtener información completa de RAM
+    local ram_info=$(sudo dmidecode -t memory 2>/dev/null)
+    
+    # Si falla dmidecode
+    if [ -z "$ram_info" ]; then
+        echo -e "${RED}❌ No se pudo obtener información de la RAM${NC}"
+        echo -e "  ${YELLOW}Posibles soluciones:${NC}"
+        echo -e "  1. Ejecutar el script como root"
+        echo -e "  2. Instalar dmidecode: ${GREEN}sudo apt install dmidecode${NC}"
+        return 1
+    fi
+
+    echo "$ram_info"
+}
+
+# Mostrar información de RAM mejorada
+show_ram_info() {
+    echo -e "\n${CYAN}_______________ 🏴 Información Detallada de RAM _____________${NC}"
+    
+    local ram_info=$(get_ram_info)
+    local current_slot=""
+    local slot_count=0
+
+    # Procesar cada bloque de memoria
+    echo "$ram_info" | awk 'BEGIN { RS = "Memory Device"; FS = "\n" } NR > 1 { print $0 }' | while read -r block; do
+        # Extraer información clave
+        slot=$(echo "$block" | grep -m1 "Locator:" | cut -d: -f2 | xargs)
+        size=$(echo "$block" | grep -m1 "Size:" | cut -d: -f2 | xargs)
+        type=$(echo "$block" | grep -m1 "Type:" | cut -d: -f2 | xargs)
+        speed=$(echo "$block" | grep -m1 "Speed:" | cut -d: -f2 | xargs)
+        manufacturer=$(echo "$block" | grep -m1 "Manufacturer:" | cut -d: -f2 | xargs)
+        part_number=$(echo "$block" | grep -m1 "Part Number:" | cut -d: -f2 | xargs)
+        voltage=$(echo "$block" | grep -m1 "Configured Voltage:" | cut -d: -f2 | xargs)
+        
+        # Extraer información de timings
+        timings=$(echo "$block" | grep -A1 "Configured Memory Timings" | tail -n1 | xargs)
+        
+        # Solo mostrar si es un módulo instalado
+        if [ "$size" != "No Module Installed" ] && [ -n "$size" ]; then
+            slot_count=$((slot_count+1))
+            
+            echo -e "\n${PURPLE}💾 Módulo RAM ${slot_count} [${YELLOW}${slot}${PURPLE}]${NC}"
+            echo -e "  ${BLUE}┌───────────────────────────────────────${NC}"
+            echo -e "  ${YELLOW}│ Tamaño:${NC}       ${size}"
+            echo -e "  ${YELLOW}│ Tipo:${NC}         ${type}"
+            echo -e "  ${YELLOW}│ Velocidad:${NC}    ${speed}"
+            [ -n "$voltage" ] && echo -e "  ${YELLOW}│ Voltaje:${NC}      ${voltage}"
+            [ -n "$timings" ] && echo -e "  ${YELLOW}│ Timings:${NC}      ${timings}"
+            echo -e "  ${BLUE}├─────────────── Fabricante ─────────────${NC}"
+            echo -e "  ${YELLOW}│ Marca:${NC}        ${manufacturer}"
+            echo -e "  ${YELLOW}│ N° Parte:${NC}     ${part_number}"
+            echo -e "  ${BLUE}└───────────────────────────────────────${NC}"
+        fi
+    done
+
+    # Resumen general
+    local total_ram=$(free -h | grep "Mem:" | awk '{print $2}')
+    local used_ram=$(free -h | grep "Mem:" | awk '{print $3}')
+    
+    echo -e "\n${GREEN}🔍 Resumen General:${NC}"
+    echo -e "  ${CYAN}Total RAM instalada:${NC} ${total_ram}"
+    echo -e "  ${CYAN}RAM en uso:${NC}        ${used_ram}"
+    echo -e "  ${CYAN}Módulos detectados:${NC} ${slot_count}"
+}
+
+
+#-----------------CODIGO-----------------------------------
 
 
 
@@ -51,6 +135,9 @@ if [[ $CHIP =~ "Integrated" ]]; then
 else
     echo -e "${YELLOW}Tipo:${NC} Dedicada"
 fi
+#Driver
+DRIVER=$(lspci -k | grep -EA3 'VGA|3D|Display')
+echo -e "${YELLOW}Driver Info:${NC} $DRIVER\n"
 
 # Información de la RAM
 echo -e "${CYAN}_______________ 🏴 ${NC} Información de la Memoria RAM ${CYAN}_____________\n"
@@ -76,6 +163,10 @@ done
 echo -e "${RED} ╓───────────────────────────╖"
 echo -e " ║ ${YELLOW}Uso Actual:${NC} $(free -h | grep Mem | awk '{print $3" / "$2}')  ${RED}║"
 echo -e " ╙───────────────────────────╜"
+
+
+show_ram_info
+
 
 # Información de discos
 echo -e "${CYAN}_______________ 💾 ${NC} Información de Almacenamiento ${CYAN}_____________\n"
@@ -122,36 +213,67 @@ else
     echo -e "   🔹 Información de CPU no disponible."
 fi
 
-echo -e "${CYAN}_______________ 🎮 Información de GPU 🎮 _______________
-${NC}"
-if command -v lspci &>/dev/null; then
-    GPU_INFO=$(lspci | grep -i "vga")
-    if [ -z "$GPU_INFO" ]; then
-        echo -e "   🔹 No se detectó GPU dedicada."
-    else
-        echo -e "   🔹 GPU detectada: $GPU_INFO"
+echo -e "${CYAN}_______________ 🌡️  Monitor de Hardware 🌡️ _______________${NC}"
+echo -e "${BLUE}════════════════ Temperaturas y Ventiladores ════════════════${NC}\n"
+
+if command -v sensors &>/dev/null; then
+    # Obtener información de sensores
+    sensors_output=$(sensors)
+    
+    # Mostrar información de chips/drivers primero
+    echo -e "${PURPLE}🔍 Chips de sensores detectados:${NC}"
+    echo "$sensors_output" | grep -E "^[^ ]" | grep -v ":" | \
+    awk -v cyan=$CYAN -v nc=$NC '{printf " 🔹 %s%s%s\n", cyan, $0, nc}'
+    
+    # Procesar temperaturas
+    echo -e "\n${YELLOW}🚨 Temperaturas por Componente:${NC}"
+    echo "$sensors_output" | grep -E "Core|Package|CPU|GPU|temp[0-9]+" | \
+    awk -v red=$RED -v green=$GREEN -v yellow=$YELLOW -v nc=$NC '{
+        # Extraer componente y temperatura
+        component = $1
+        if ($0 ~ /[0-9]+°[CF]/) {
+            temp = $0
+            gsub(/[^0-9.]/, "", temp)
+            temp = temp+0
+            
+            # Color según temperatura
+            if (temp > 80) color = red
+            else if (temp > 60) color = yellow
+            else color = green
+            
+            # Mejorar nombres de componentes
+            if (component ~ /Core/) component = "CPU " component
+            else if (component ~ /Package/) component = "CPU " component
+            else if (component ~ /temp/) {
+                gsub(/temp/, "Sensor ", component)
+                component = component " (" $1 ")"
+            }
+            
+            # Formatear salida
+            gsub(/([0-9]+°[CF])/, color "&" nc)
+            printf " 🔸 %-15s: %s\n", component, $0
+        }
+    }'
+    
+    # Procesar ventiladores
+    echo -e "\n${PURPLE}🌀 Ventiladores:${NC}"
+    echo "$sensors_output" | grep -i "fan" | \
+    awk -v cyan=$CYAN -v nc=$NC '{
+        if ($3 ~ /RPM/) {
+            printf " 🔹 %-15s: %s %s %s\n", $1, cyan $2, $3, nc
+        } else {
+            printf " 🔹 %-15s: %s\n", $1, cyan $2, nc
+        }
+    }'
+    
+    # Mensaje si no hay ventiladores
+    fan_count=$(echo "$sensors_output" | grep -ci "fan")
+    if [ "$fan_count" -eq 0 ]; then
+        echo -e " ${RED}⚠️ No se detectaron ventiladores con sensores${NC}"
     fi
 else
-    echo -e "   🔹 No se pudo obtener información de GPU."
+    echo -e "${RED}❌ Error: El comando 'sensors' no está instalado.${NC}"
+    echo -e "Por favor instala lm-sensors: ${GREEN}sudo apt install lm-sensors${NC}"
 fi
 
-echo -e "${CYAN}_______________ 💾 Información de RAM 💾 _______________
-${NC}"
-if command -v dmidecode &>/dev/null && [ $(id -u) -eq 0 ]; then
-    sudo dmidecode -t memory | grep -E "Size|Speed|Manufacturer|Part Number" | awk -F: '{printf "   🔹 %s: %s\n", $1, $2}'
-else
-    echo -e "   🔹 Ejecutar como root para ver detalles de la RAM."
-fi
-
-echo -e "${CYAN}_______________ 💽 Información de Discos 💽 _______________
-${NC}"
-
-
-echo -e "${CYAN}_______________ 🌡️ Temperatura y Ventiladores 🌡️ _______________
-${NC}"
-if command -v sensors &>/dev/null; then
-    sensors | grep -E "Core|fan" | awk '{printf "   🔹 %s %s %s\n", $1, $2, $3}'
-else
-    echo -e "   🔹 No se pudo obtener información de temperatura y ventiladores."
-fi
-
+echo -e "\n${BLUE}══════════════════════════════════════════════════════════${NC}"
