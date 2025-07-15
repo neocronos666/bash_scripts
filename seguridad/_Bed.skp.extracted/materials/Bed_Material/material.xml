@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<materialDocument xmlns="http://sketchup.google.com/schemas/sketchup/1.0/material" xmlns:mat="http://sketchup.google.com/schemas/sketchup/1.0/material">
+  <mat:material name="Bed_Material" type="1" workflow="1" colorRed="128" colorGreen="134" colorBlue="194" colorizeType="0" trans="0.5" useTrans="0" pbrPromoState="0" hasTexture="1">
+    <mat:texture textureFilename="https://3dwarehouse.sketchup.com/warehouse/v1.0/entities/06606b95-e669-4718-b6ea-7efb7a3f296a/binaries/image?download=true" xScale="1" yScale="1" avgColor="4290938496">
+      <mat:images>
+        <mat:image id="1" path="./image_download=true.png" file_name="image?download=true.png"/>
+      </mat:images>
+    </mat:texture>
+    <mat:pbrMR xScale="1" yScale="1">
+      <mat:enable_metalness>1</mat:enable_metalness>
+      <mat:enable_roughness>1</mat:enable_roughness>
+      <mat:enable_normal>1</mat:enable_normal>
+      <mat:enable_occlusion>1</mat:enable_occlusion>
+      <mat:roughness_texture id="2" path="./.png" file_name=".png"/>
+      <mat:normal_texture id="3" path="./_1.png" file_name=".png"/>
+      <mat:occlusion_texture id="4" path="./_2.png" file_name=".png"/>
+      <mat:metallicFactor>0</mat:metallicFactor>
+      <mat:roughnessFactor>1</mat:roughnessFactor>
+      <mat:normalMapStyle>1</mat:normalMapStyle>
+      <mat:normalScale>1</mat:normalScale>
+      <mat:occlusionStrength>1</mat:occlusionStrength>
+      <mat:baseColorFactor>4294967295</mat:baseColorFactor>
+    </mat:pbrMR>
+  </mat:material>
+</materialDocument>

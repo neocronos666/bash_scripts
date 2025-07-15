@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<materialDocument xmlns="http://sketchup.google.com/schemas/sketchup/1.0/material" xmlns:mat="http://sketchup.google.com/schemas/sketchup/1.0/material">
+  <mat:material name="Bed_Material1" type="0" workflow="1" colorRed="255" colorGreen="255" colorBlue="255" colorizeType="0" trans="0.5" useTrans="0" pbrPromoState="0" hasTexture="0">
+    <mat:pbrMR xScale="1" yScale="1">
+      <mat:enable_metalness>1</mat:enable_metalness>
+      <mat:enable_roughness>1</mat:enable_roughness>
+      <mat:enable_normal>0</mat:enable_normal>
+      <mat:enable_occlusion>0</mat:enable_occlusion>
+      <mat:metallicFactor>0</mat:metallicFactor>
+      <mat:roughnessFactor>0.5</mat:roughnessFactor>
+      <mat:normalMapStyle>1</mat:normalMapStyle>
+      <mat:normalScale>1</mat:normalScale>
+      <mat:occlusionStrength>1</mat:occlusionStrength>
+      <mat:baseColorFactor>4294967295</mat:baseColorFactor>
+    </mat:pbrMR>
+  </mat:material>
+</materialDocument>

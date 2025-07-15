@@ -46,7 +46,8 @@ sudo apt install -y yt-dlp ffmpeg
     #Necesario para leer las cookies 
 pip install --upgrade browser-cookie3
 
-
+# para usar binwalk
+sudo apt install binwalk gzip bzip2 tar unzip p7zip-full cpio python3-pip
 
 
 
