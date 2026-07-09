@@ -1,7 +1,7 @@
 # 🔰Bash Scripts🔰
 
 ## 🌟 Descripción 🌟
-Bash Scripts es un **frontend minimalista** de línea de comandos para el shell, diseñado para proporcionar una interfaz rápida e interactiva para la ejecución de scripts y comandos en Linux. Su filosofía se basa en **usar solo Bash y comandos nativos**, asegurando compatibilidad con cualquier terminal sin depender de software externo.
+Bash Scripts es un **frontend minimalista** de línea de comandos para el shell, diseñado para proporcionar una interfaz rápida e interactiva para la ejecución de scripts y comandos en Linux. Su filosofía se basa en **usar solo Bash y comandos nativos en lo posible**, asegurando compatibilidad con cualquier terminal sin depender de software externo.
 
 ## 🛠️ Características 🛠️
 - **Interfaz interactiva**: Permite navegar y ejecutar scripts desde un menú intuitivo.

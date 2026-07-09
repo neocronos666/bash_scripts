@@ -114,7 +114,8 @@ elif [[ "$opcion" == "*" ]]; then
     BASE_DIR=$(pwd) # Actualiza BASE_DIR al nivel superior
 # Manejar entradas no válidas o desconocidas
 elif [[ "$opcion" == "w" ]]; then
-    curl wttr.in
+    clear
+    curl http://wttr.in/U9211
     read -p "✳️ (continuar)"
 else
     # echo -e "${RED}⚠ Error: Opción no válida: '$opcion'${NC}"
