@@ -4,16 +4,16 @@ cabecera(){
 
 linea
 
-echo " Host..... $(hostname)"
-echo " Usuario.. $USER"
-echo " Kernel... $(uname -r)"
-echo " IP....... $(hostname -I | awk '{print $1}')"
+echo -e "${YELLOW} 🏠 Host..... ${CYAN}$(hostname)"
+echo -e "${YELLOW} 👤 Usuario.. ${CYAN}$USER"
+echo -e "${YELLOW} ❄️  Kernel... ${CYAN}$(uname -r)"
+echo -e "${YELLOW} 🔢 IP....... ${CYAN}$(hostname -I | awk '{print $1}')"
 
 if [[ -n "$SSH_CONNECTION" ]]
 then
-    echo " Sesión... SSH"
+    echo -e "${RED} 🏢SSH${YELLOW}"
 else
-    echo " Sesión... Local"
+    echo -e "${GREEN} 🏡Local${YELLOW}"
 fi
 
 linea
