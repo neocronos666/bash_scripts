@@ -9,43 +9,43 @@ source "$SCRIPT_DIR/.lib/banner.sh"
 VERSION="0.1"
 #### FUNCIONES ####
 mostrar_estado(){
-
+echo "test"
 }
 
 mostrar_discos(){
-
+echo "test"
 }
 
 mostrar_servicios(){
-
+echo "test"
 }
 
 mostrar_docker(){
-
+echo "test"
 }
 
 mostrar_red(){
-
+echo "test"
 }
 
 mostrar_proxmox(){
-
+echo "test"
 }
 
 buscar_journal(){
-
+echo "test"
 }
 
 permisos_rapidos(){
-
+echo "test"
 }
 
 montajes(){
-
+echo "test"
 }
 
 apagar_maquina(){
-
+echo "test"
 }
 ###### MENU ######
 menu(){

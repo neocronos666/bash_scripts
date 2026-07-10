@@ -2,7 +2,8 @@
 
 linea(){
 
-printf '%*s\n' "${COLUMNS:-80}" '' | tr ' ' '━'
+#printf '%*s\n' "${COLUMNS:-80}" '' | tr ' ' '━'
+printf '━%.0s' $(seq 1 "${COLUMNS:-80}"); echo
 
 }
 
