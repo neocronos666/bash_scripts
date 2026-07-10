@@ -7,12 +7,6 @@ YELLOW="\e[33m"
 NC="\e[0m"
 clear
 
-🈴
-👤
-📈
-🖳
-
-
 #TITULO
     echo -e "🔰              "
     echo -e "${CYAN}_______________ 🖧 ${NC} Información de Red en Linux 🖳${CYAN}___________\n"
@@ -21,7 +15,7 @@ clear
 
 
 #MENU
-   echo -e "         ${YELLOW}[1]${RED} git init ${NC} - ${GREEN}Inicializa un nuevo repositorio Git"
+   echo -e "         ${YELLOW}[1]${RED} Item Menu ${NC} - ${GREEN}Esta es la descripcion de un tiem del menu"
 
 #OPCIONES DE MENU
     echo -e "\n    ${YELLOW}[0] ◀️ Volver\n"
@@ -33,4 +27,5 @@ clear
 #CIERRE
     echo -e "${CYAN}    ________________________________________________________${YELLOW}\n"
 
-
+#VOLVER
+    echo -e "${YELLOW}✳️ Volver ..."
