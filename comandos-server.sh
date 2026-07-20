@@ -107,7 +107,7 @@ mostrar_discos(){
     echo
     echo -e "${CYAN} ########### 💽 Discos ########### ${NC}"
     echo
-    lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,MODEL
+    lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,MODEL | column -t
 #    echo -e "${YELLOW}"
     linea
 
@@ -146,7 +146,9 @@ mostrar_docker(){
     echo
     echo -e "${CYAN} ########### 🐳 Docker ########### ${NC}"
     echo
-    docker ps
+    docker ps -a \
+    --format \
+    'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
 
     echo
 
