@@ -140,6 +140,13 @@ __nc_prompt() {
     git=$(__nc_git)
     conda=$(__nc_conda)
     elapsed=$(__nc_elapsed)
+    
+    local ip
+
+    ip=$(ip route get 1.1.1.1 2>/dev/null \
+    | awk '{print $7; exit}')
+
+    [[ -z "$ip" ]] && ip="sin-red"
 
     local host="${HOSTNAME:-$(hostname)}"
     local pwd_display="${PWD/#$HOME/\~}"
@@ -191,6 +198,7 @@ __nc_prompt() {
     ###################################
 
     local line3="${gray}│${reset}"
+    line3+=" ${cyan}󰩟 ${ip}${reset}"
 
     [[ -n "$git" ]] && \
         line3+=" ${green}󰘬 ${git}${reset}"
@@ -218,7 +226,8 @@ EOF
 
 echo
 echo "Prompt instalado."
-echo "Recargando shell..."
+#echo "Recargando shell..."
 sleep 1
+clear
 
 exec bash
