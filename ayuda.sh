@@ -10,7 +10,8 @@ CYAN='\e[36m'
 RESET='\e[0m'
 
 # Archivo a mostrar
-README_FILE="/home/neocronos/Documentos/bash_scripts/README.md"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+README_FILE="${BASH_SCRIPTS_README:-$SCRIPT_DIR/README.md}"
 
 #README_FILE="${BASE_DIR}/README.md"
 #BASE_DIR=$(grep '^BASE_DIR=' ayuda | cut -d'=' -f2)
@@ -48,6 +49,5 @@ while IFS= read -r line; do
         echo "$line"
     fi
 done < "$README_FILE"
-
 
 

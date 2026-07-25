@@ -20,7 +20,7 @@ fi
 URL=$(echo "$URL" | xargs)
 
 # Nombre de la carpeta de salida
-CARPETA_SALIDA="$HOME/Descargas/scrapped/web"
+CARPETA_SALIDA="${BASH_SCRIPTS_DOWNLOADS:-$HOME/Descargas/scrapped}/web"
 
 # Mensaje de inicio
 echo -e "\n===== 🌐 Descargando el sitio: $URL =====\n"
@@ -36,4 +36,3 @@ if [ $? -eq 0 ]; then
 else
     echo -e "\n❌ Hubo un error en la descarga.\n"
 fi
-

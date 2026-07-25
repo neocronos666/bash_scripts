@@ -1,5 +1,29 @@
 #!/bin/bash
 
+comando_disponible() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+requerir_comando() {
+    comando_disponible "$1" && return 0
+    printf 'Error: falta el comando requerido: %s\n' "$1" >&2
+    return 127
+}
+
+confirmacion_texto() {
+    local mensaje="$1"
+    local esperado="$2"
+    local respuesta
+
+    read -r -p "$mensaje (escriba $esperado): " respuesta
+    [[ "$respuesta" == "$esperado" ]]
+}
+
+crear_temporal() {
+    local prefijo="${1:-bash-scripts}"
+    mktemp "${TMPDIR:-/tmp}/${prefijo}.XXXXXX"
+}
+
 linea(){
 echo -e "${YELLOW}"
 #printf '%*s\n' "${COLUMNS:-80}" '' | tr ' ' '━'
@@ -10,13 +34,13 @@ echo -e "${NC}"
 pausa(){
 
 echo
-read -n1 -rsp $'✳️ Presione una tecla para continuar...\n'
+read -r -n1 -s -p $'✳️ Presione una tecla para continuar...\n'
 
 }
 
 confirmacion(){
 
-read -rp "🔴¿Continuar? [s/N] " RESP
+read -r -p "🔴¿Continuar? [s/N] " RESP
 
 [[ "$RESP" =~ ^[sS]$ ]]
 
@@ -98,4 +122,3 @@ fila_dinamica() {
 
     echo -e "$output$NC"
 }
-

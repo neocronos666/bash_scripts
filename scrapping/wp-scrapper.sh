@@ -25,10 +25,11 @@ VERSION="0.1.0"
 USER_AGENT="Mozilla/5.0"
 TIMEOUT=10
 MAX_RETRIES=3
+MAX_DEPTH=10
 
 MAX_LINEAS=30
 
-DESTINO="$HOME/Descargas/scrapped/wp"
+DESTINO="${BASH_SCRIPTS_DOWNLOADS:-$HOME/Descargas/scrapped}/wp"
 CACHE_DIR="$HOME/.cache/wp-scrapper"
 
 COLOR=1
@@ -63,6 +64,7 @@ CACHE_LISTA=""
 CACHE_FILTRADA=""
 
 TMP_ACTUAL=""
+VISITADOS=""
 
 RESULTADOS=0
 RESULTADOS_FILTRADOS=0
@@ -146,8 +148,21 @@ tmp_existen() {
 }
 
 tmp_reanudar() {
+    local -a pendientes=()
+    local opcion
 
-    :
+    mapfile -t pendientes < <(tmp_listar)
+    ((${#pendientes[@]})) || return 0
+    for opcion in "${!pendientes[@]}"; do
+        printf "%d) %s\n" "$((opcion + 1))" "$(basename "${pendientes[$opcion]}")"
+    done
+    printf "0) Cancelar\n"
+    read -r -p "Descarga a reanudar: " opcion
+    [[ "$opcion" =~ ^[0-9]+$ ]] || return 1
+    ((opcion > 0 && opcion <= ${#pendientes[@]})) || return 0
+    TMP_ACTUAL="${pendientes[$((opcion - 1))]}"
+    descarga_ejecutar
+    descarga_informe
 
 }
 
@@ -156,94 +171,35 @@ tmp_reanudar() {
 ########################################
 
 scan_analizar() {
-
+    local lista_urls
     CACHE_LISTA="$(mktemp "$CACHE_DIR/lista.XXXXXX")"
     CACHE_FILTRADA="$(mktemp "$CACHE_DIR/filtro.XXXXXX")"
-
-    : > "$CACHE_LISTA"
-
-    ####################################
-    # 1 - INDEX OF
-    ####################################
+    lista_urls="$(mktemp "$CACHE_DIR/urls.XXXXXX")"
+    VISITADOS="$(mktemp "$CACHE_DIR/visitados.XXXXXX")"
 
     ui_info "Intentando Index Of..."
-
-    if scan_index >> "$CACHE_LISTA"
-    then
-
-        sort -u "$CACHE_LISTA" -o "$CACHE_LISTA"
-
-        RESULTADOS=$(wc -l < "$CACHE_LISTA")
-        RESULTADOS_FILTRADOS=$RESULTADOS
-
-        cp "$CACHE_LISTA" "$CACHE_FILTRADA"
-
-        ui_ok "$RESULTADOS archivo(s) encontrado(s)."
-
-        return 0
-
+    if ! scan_index >> "$lista_urls"; then
+        ui_info "Intentando sitemap..."
+        scan_sitemap >> "$lista_urls" || true
+        ui_info "Intentando robots.txt..."
+        scan_robots >> "$lista_urls" || true
     fi
 
-    ####################################
-    # 2 - SITEMAP
-    ####################################
-
-    ui_info "Intentando sitemap..."
-
-    scan_sitemap >> "$CACHE_LISTA" || true
-
-    ####################################
-    # 3 - ROBOTS
-    ####################################
-
-    ui_info "Intentando robots.txt..."
-
-    scan_robots >> "$CACHE_LISTA" || true
-
-    sort -u "$CACHE_LISTA" -o "$CACHE_LISTA"
+    sort -u "$lista_urls" -o "$lista_urls"
+    while IFS= read -r enlace; do
+        [[ -n "$enlace" ]] && metadata_archivo "$enlace"
+    done < "$lista_urls" > "$CACHE_LISTA"
+    rm -f "$lista_urls" "$VISITADOS"
+    VISITADOS=""
 
     RESULTADOS=$(wc -l < "$CACHE_LISTA")
     RESULTADOS_FILTRADOS=$RESULTADOS
-
     cp "$CACHE_LISTA" "$CACHE_FILTRADA"
-
     ui_ok "$RESULTADOS archivo(s) encontrado(s)."
-    if (( RESULTADOS == 0 ))
-    then
-
-        while true
-        do
-
-            printf "\n"
-            echo "1) Probar otra URL"
-            echo "0) Salir"
-            printf "\n"
-
-            read -rp "🗿$user⭕> " OPCION
-
-            case "$OPCION" in
-
-                1)
-                    continue 2
-                    ;;
-
-                0)
-                    exit 0
-                    ;;
-
-                \?)
-                    ui_info "Ayuda aún no implementada."
-                    ;;
-
-                *)
-                    ui_error "Opción inválida."
-                    ;;
-
-            esac
-
-        done
-
-    fi
+    ((RESULTADOS > 0)) || {
+        ui_error "No se encontraron archivos."
+        return 1
+    }
 
 }
 
@@ -251,6 +207,7 @@ scan_index() {
 
     local pagina
     local codigo
+    pagina="$(mktemp "$CACHE_DIR/index.XXXXXX")"
 
     codigo=$(
         curl \
@@ -259,15 +216,13 @@ scan_index() {
             --connect-timeout "$TIMEOUT" \
             --user-agent "$USER_AGENT" \
             --write-out "%{http_code}" \
-            --output /tmp/wp_scrapper_index.$$ \
+            --output "$pagina" \
             "$URL"
     )
 
     [[ "$codigo" != "200" ]] && return 1
 
-    pagina="/tmp/wp_scrapper_index.$$"
-
-    if ! grep -qi "Index of" "$pagina"
+    if ! grep -Eqi "Index of|Directory listing for" "$pagina"
     then
         rm -f "$pagina"
         return 1
@@ -284,11 +239,11 @@ scan_index() {
         if [[ "$enlace" =~ /$ ]]
         then
 
-            scan_index_directorio "$URL$enlace"
+            scan_index_directorio "$(url_resolver "$URL" "$enlace")" 1
 
         else
 
-            printf "%s%s\n" "$URL" "$enlace"
+            url_resolver "$URL" "$enlace"
 
         fi
 
@@ -301,8 +256,13 @@ scan_index() {
 scan_index_directorio() {
 
     local BASE="$1"
+    local profundidad="${2:-1}"
     local pagina
     local codigo
+    ((profundidad <= MAX_DEPTH)) || return 0
+    grep -Fqx "$BASE" "$VISITADOS" 2>/dev/null && return 0
+    printf '%s\n' "$BASE" >> "$VISITADOS"
+    pagina="$(mktemp "$CACHE_DIR/directorio.XXXXXX")"
 
     codigo=$(
         curl \
@@ -311,21 +271,13 @@ scan_index_directorio() {
             --connect-timeout "$TIMEOUT" \
             --user-agent "$USER_AGENT" \
             --write-out "%{http_code}" \
-            --output /tmp/wp_scrapper_dir.$$ \
+            --output "$pagina" \
             "$BASE"
     )
 
     [[ "$codigo" != "200" ]] && return
 
-    pagina="/tmp/wp_scrapper_dir.$$"
-
-    awk '
-        match($0,/href="([^"]+)"/,a){
-
-            print a[1]
-
-        }
-    ' "$pagina" \
+    grep -oE 'href="[^"]+"' "$pagina" | sed -E 's/^href="//; s/"$//' \
     | while read -r enlace
     do
 
@@ -334,11 +286,11 @@ scan_index_directorio() {
         if [[ "$enlace" =~ /$ ]]
         then
 
-            scan_index_directorio "$BASE$enlace"
+            scan_index_directorio "$(url_resolver "$BASE" "$enlace")" "$((profundidad + 1))"
 
         else
 
-            printf "%s%s\n" "$BASE" "$enlace"
+            url_resolver "$BASE" "$enlace"
 
         fi
 
@@ -346,6 +298,52 @@ scan_index_directorio() {
 
     rm -f "$pagina"
 
+}
+
+url_resolver() {
+    local base="$1"
+    local enlace="$2"
+    local origen resultado origen_resultado origen_objetivo
+
+    enlace="${enlace%%#*}"
+    [[ -n "$enlace" ]] || return 1
+    [[ "$enlace" =~ ^(mailto:|javascript:|data:) ]] && return 1
+    if [[ "$enlace" =~ ^https?:// ]]; then
+        resultado="$enlace"
+    else
+        origen="${base%%//*}//${base#*//}"
+        origen="${origen%%/*}"
+        if [[ "$enlace" == /* ]]; then
+            resultado="$origen$enlace"
+        else
+            [[ "$base" == */ ]] || base="${base%/*}/"
+            resultado="$base$enlace"
+        fi
+    fi
+
+    if [[ -n "$URL" ]]; then
+        origen_resultado="${resultado%%//*}//${resultado#*//}"
+        origen_resultado="${origen_resultado%%/*}"
+        origen_objetivo="${URL%%//*}//${URL#*//}"
+        origen_objetivo="${origen_objetivo%%/*}"
+        [[ "$origen_resultado" == "$origen_objetivo" ]] || return 1
+    fi
+    printf '%s\n' "$resultado"
+}
+
+metadata_archivo() {
+    local enlace="$1"
+    local nombre tamano
+
+    nombre="$(basename "${enlace%%\?*}")"
+    [[ -n "$nombre" && "$nombre" != "/" ]] || nombre="index"
+    tamano="$(
+        curl --silent --location --head --connect-timeout "$TIMEOUT" \
+            --max-time "$TIMEOUT" --user-agent "$USER_AGENT" "$enlace" |
+            awk 'BEGIN{IGNORECASE=1} /^content-length:/ {gsub("\r","",$2); n=$2} END{print n}'
+    )"
+    [[ "$tamano" =~ ^[0-9]+$ ]] || tamano="-"
+    printf "%s\t%s\t%s\n" "$nombre" "$tamano" "$enlace"
 }
 
 scan_sitemap() {
@@ -694,7 +692,7 @@ nombre_destino() {
             "$n" \
             "$ext"
 
-        ((n++))
+        ((n += 1))
 
     done
 
@@ -708,9 +706,8 @@ quitar_tmp() {
 
     local url="$1"
 
-    grep -Fvx "$url" \
-        "$TMP_ACTUAL" \
-        > "${TMP_ACTUAL}.tmp" || true
+    awk -F '\t' -v objetivo="$url" '$3 != objetivo' \
+        "$TMP_ACTUAL" > "${TMP_ACTUAL}.tmp"
 
     mv \
         "${TMP_ACTUAL}.tmp" \
@@ -785,7 +782,7 @@ descarga_ejecutar() {
         while IFS=$'\t' read -r nombre tamano url
         do
 
-            ((actual++))
+            ((actual += 1))
 
             printf "\n"
 
@@ -899,7 +896,10 @@ pedir_url() {
                 ui_info "Ayuda aún no implementada."
                 ;;
             *)
-                return
+                if [[ "$URL" =~ ^https?://[^[:space:]]+$ ]]; then
+                    return
+                fi
+                ui_error "La URL debe comenzar con http:// o https://."
                 ;;
         esac
     done
@@ -908,6 +908,8 @@ pedir_url() {
 
 reiniciar() {
 
+    [[ -n "$CACHE_LISTA" ]] && rm -f -- "$CACHE_LISTA"
+    [[ -n "$CACHE_FILTRADA" ]] && rm -f -- "$CACHE_FILTRADA"
     URL=""
 
     BUSQUEDA=""
@@ -926,6 +928,14 @@ reiniciar() {
 
 main() {
 
+    command -v curl >/dev/null 2>&1 || {
+        ui_error "Falta curl."
+        return 127
+    }
+    command -v wget >/dev/null 2>&1 || {
+        ui_error "Falta wget."
+        return 127
+    }
     mkdir -p "$DESTINO"
     cache_crear
 
@@ -963,6 +973,7 @@ main() {
         echo "1) Reanudar"
         echo "2) Ignorar"
         echo "0) Salir"
+        read -r -p "Opción: " RESPUESTA
         case "$RESPUESTA" in
 
             1)
@@ -1001,7 +1012,10 @@ main() {
 
         ui_info "Analizando..."
 
-        scan_analizar
+        if ! scan_analizar; then
+            pausa
+            continue
+        fi
 
         ################################
         # BUCLE DE FILTRADO
@@ -1051,7 +1065,7 @@ main() {
 
             printf "\n"
 
-            read -rp "🗿$user⭕> " OPCION
+            read -rp "🗿${USER:-usuario}⭕> " OPCION
 
             case "$OPCION" in
 
@@ -1102,6 +1116,8 @@ main() {
 # INICIO
 ########################################
 
-main
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    main
+fi
 
 exit 0

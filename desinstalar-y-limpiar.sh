@@ -8,9 +8,10 @@ NC="\e[0m"
 clear
 
 ejecutar_comando() {
-    sudo apt purge $1
+    local paquete="$1"
+    sudo apt purge -- "$paquete"
     sudo apt autoremove
-    sudo apt clean     
+    sudo apt clean
 }
 
     clear
@@ -21,10 +22,12 @@ ejecutar_comando() {
     echo -e "${CYAN}       ║          ${YELLOW}[0] ${RED}⮿${NC} Volver"
     echo -e "${CYAN}       ╙───────────────────────────────────────────────╾\n\n${GREEN}"        
 #    echo -e "${GREEN}          ⛶ Cual es el paquete a desinstalar?" 
-    read -p "⛶ Qué paquete desinstalar?  " opcion
+    read -r -p "⛶ Qué paquete desinstalar?  " opcion
 if [[ "$opcion" == "0" ]]; then    
     exit 0
 else
-    ejecutar_comando $opcion
+    printf 'Se desinstalará el paquete: %s\n' "$opcion"
+    read -r -p "Escriba ELIMINAR para confirmar: " confirmar
+    [[ "$confirmar" == "ELIMINAR" ]] || exit 0
+    ejecutar_comando "$opcion"
 fi    
-

@@ -4,8 +4,8 @@ set -euo pipefail
 # ---- Config ----
 CON_NAME="Claro 3G"
 APN="igprs.claro.com.ar"
-USER="claro"
-PASS="claro"
+APN_USER="claro"
+APN_PASS="claro"
 # Tiempo máximo de espera (segundos)
 WAIT_USB=20
 WAIT_MM=30
@@ -113,12 +113,12 @@ else
   if ! nmcli -t -f NAME connection show | grep -Fxq "$CON_NAME"; then
     say "Creando conexión '$CON_NAME' (APN: $APN)…"
     nmcli connection add type gsm ifname "*" con-name "$CON_NAME" \
-      gsm.apn "$APN" gsm.username "$USER" gsm.password "$PASS" gsm.number "*99#" \
+      gsm.apn "$APN" gsm.username "$APN_USER" gsm.password "$APN_PASS" gsm.number "*99#" \
       ipv4.method auto ipv6.method ignore connection.autoconnect yes >/dev/null
     ok "Conexión creada."
   else
     say "Conexión '$CON_NAME' ya existe. Actualizando parámetros básicos…"
-    nmcli connection modify "$CON_NAME" gsm.apn "$APN" gsm.username "$USER" gsm.password "$PASS" gsm.number "*99#" ipv4.method auto ipv6.method ignore connection.autoconnect yes
+    nmcli connection modify "$CON_NAME" gsm.apn "$APN" gsm.username "$APN_USER" gsm.password "$APN_PASS" gsm.number "*99#" ipv4.method auto ipv6.method ignore connection.autoconnect yes
   fi
 
   say "Levantando conexión '$CON_NAME'…"
@@ -140,4 +140,3 @@ else
 fi
 
 ok "Listo. Si quedó conectado, ya tenés Internet por el E3131."
-

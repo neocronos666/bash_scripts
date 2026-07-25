@@ -4,6 +4,8 @@ set -e
 
 echo "==> Configurando shell..."
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
 touch ~/.bashrc
 
 #
@@ -148,9 +150,9 @@ case "$RESP" in
 
     s|S|si|SI)
 
-        if [[ -f ./setup-prompt.sh ]]; then
+        if [[ -f "$SCRIPT_DIR/setup-prompt.sh" ]]; then
 
-            bash ./setup-prompt.sh
+            bash "$SCRIPT_DIR/setup-prompt.sh"
 
         else
 

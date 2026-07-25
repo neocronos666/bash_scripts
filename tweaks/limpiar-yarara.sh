@@ -20,8 +20,15 @@ echo "      YARARA CLEANUP - ONE SHOT"
 echo "=========================================="
 echo -e "${NC}"
 
-read -p "¿Continuar? [s/N] " RESP
-[[ ! "$RESP" =~ ^[Ss]$ ]] && exit 0
+echo "Esta operación eliminará Docker y todos sus datos, Bottles,"
+echo "paquetes huérfanos, kernels antiguos y varias cachés de usuario."
+if [[ "${1:-}" == "--dry-run" ]]; then
+    echo
+    echo "Modo simulación: no se realizó ningún cambio."
+    exit 0
+fi
+read -r -p "Escriba ELIMINAR para continuar: " RESP
+[[ "$RESP" == "ELIMINAR" ]] || exit 0
 
 #############################################
 echo -e "${YELLOW}🐳 Eliminando Docker...${NC}"
@@ -49,8 +56,8 @@ sudo rm -rf \
 /var/lib/docker \
 /etc/docker \
 /var/lib/containerd \
-/var/run/docker.sock \
-~/.docker
+/var/run/docker.sock
+rm -rf "${HOME}/.docker"
 
 echo -e "${GREEN}✔ Docker eliminado${NC}"
 

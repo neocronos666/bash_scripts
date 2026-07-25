@@ -42,15 +42,17 @@ clear
         # Entornos virtuales de Python (venv)
         venvs=()
         if [ -d "$HOME/.virtualenvs" ]; then
-            venvs+=($(ls "$HOME/.virtualenvs"))
+            while IFS= read -r -d '' env_dir; do
+                venvs+=("$env_dir")
+            done < <(find "$HOME/.virtualenvs" -mindepth 1 -maxdepth 1 -type d -print0)
         fi
 
         # Buscar entornos en el home y proyectos
-        find $HOME -type d -name "env" -o -name "venv" 2>/dev/null | while read env_dir; do
-            if [ -f "$env_dir/bin/activate" ]; then
-                venvs+=("$env_dir")
-            fi
-        done
+        while IFS= read -r -d '' env_dir; do
+            [[ -f "$env_dir/bin/activate" ]] && venvs+=("$env_dir")
+        done < <(
+            find "$HOME" -type d \( -name env -o -name venv \) -print0 2>/dev/null
+        )
 
         if [ ${#venvs[@]} -gt 0 ]; then
             echo -e "${YELLOW} 🔹 Entornos virtuales Python encontrados:${NC}"
@@ -80,7 +82,7 @@ clear
         )
 
         for server in "${!servers[@]}"; do
-            if command -v $server &>/dev/null; then
+            if command -v "$server" &>/dev/null; then
                 echo " 🔹 $server está instalado."
             fi
         done
@@ -90,7 +92,6 @@ clear
         echo -e "${YELLOW} 🔹 Anaconda: ${NC}$(which conda)"
         echo -e "${YELLOW} 🔹 Servidores web: ${NC}/etc/nginx, /etc/apache2"
         echo -e "${YELLOW} 🔹 Bases de datos: ${NC}/var/lib/mysql, /var/lib/postgresql"
-
 
 
 

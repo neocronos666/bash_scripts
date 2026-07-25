@@ -90,30 +90,30 @@ ejecutar_comando() {
     case $1 in
         0) exit 0 ;;
         1) git init ;;
-        2) read -p "Ingrese la URL: " url; git clone $url ;;
-        3) read -p "📝 Ingrese el archivo: " archivo; git add $archivo ;;
-        4) read -p "Ingrese el mensaje: " mensaje; git commit -m "$mensaje" ;;
+        2) read -r -p "Ingrese la URL: " url; git clone -- "$url" ;;
+        3) read -r -p "📝 Ingrese el archivo: " archivo; git add -- "$archivo" ;;
+        4) read -r -p "Ingrese el mensaje: " mensaje; git commit -m "$mensaje" ;;
         5) git status ;;
         6) git log ;;
         7) git diff ;;
-        8) read -p "Ingrese la rama: " rama; git checkout $rama ;;
+        8) read -r -p "Ingrese la rama: " rama; git checkout -- "$rama" ;;
         9) git branch ;;
-        10) read -p "Ingrese la rama: " rama; git merge $rama ;;
+        10) read -r -p "Ingrese la rama: " rama; git merge -- "$rama" ;;
         11) git remote ;;
         12) git fetch ;;
         13) git pull ;;
         14) git push ;;
-        15) read -p "Ingrese el archivo: " archivo; git reset $archivo ;;
-        16) read -p "Ingrese el archivo: " archivo; git rm $archivo ;;
-        17) read -p "Ingrese el origen: " origen; read -p "Ingrese el destino: " destino; git mv $origen $destino ;;
-        18) read -p "Ingrese el commit: " commit; git show $commit ;;
-        19) read -p "Ingrese el nombre: " nombre; git tag $nombre ;;
+        15) read -r -p "Ingrese el archivo: " archivo; git reset -- "$archivo" ;;
+        16) read -r -p "Ingrese el archivo: " archivo; read -r -p "Escriba ELIMINAR para confirmar: " confirmar; [[ "$confirmar" == "ELIMINAR" ]] && git rm -- "$archivo" ;;
+        17) read -r -p "Ingrese el origen: " origen; read -r -p "Ingrese el destino: " destino; git mv -- "$origen" "$destino" ;;
+        18) read -r -p "Ingrese el commit: " commit; git show "$commit" ;;
+        19) read -r -p "Ingrese el nombre: " nombre; git tag "$nombre" ;;
         20) git stash ;;
         21) git stash pop ;;
         22) git stash list ;;
-        23) git stash drop ;;
-        24) read -p "Ingrese el archivo: " archivo; git blame $archivo ;;
-        25) git clean -f ;;
+        23) read -r -p "Escriba ELIMINAR para confirmar: " confirmar; [[ "$confirmar" == "ELIMINAR" ]] && git stash drop ;;
+        24) read -r -p "Ingrese el archivo: " archivo; git blame -- "$archivo" ;;
+        25) git clean -nd; read -r -p "Escriba ELIMINAR para borrar lo listado: " confirmar; [[ "$confirmar" == "ELIMINAR" ]] && git clean -fd ;;
         26) git reflog ;;
         27) git shortlog ;;
         28) git describe ;;
@@ -122,9 +122,9 @@ ejecutar_comando() {
 # Ciclo principal del script
 while true; do
     mostrar_menu
-    echo -n "⭕ Seleccione una opción (0-20): "
-    read opcion
-    ejecutar_comando $opcion
+    echo -n "⭕ Seleccione una opción (0-28): "
+    read -r opcion
+    ejecutar_comando "$opcion"
     echo -e "${YELLOW} ⏳ (continuar)"
     read
 done

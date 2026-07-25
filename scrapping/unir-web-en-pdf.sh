@@ -19,11 +19,13 @@ if [ ! -d "$html_dir" ]; then
     exit 1
 fi
 
-# Buscar archivos HTML y ordenarlos
-html_files=$(find "$html_dir" -type f -name "*.html" | sort)
+# Buscar archivos HTML y ordenarlos, conservando espacios en los nombres
+mapfile -d '' -t html_files < <(
+    find "$html_dir" -type f -name "*.html" -print0 | sort -z
+)
 
 # Verificar si hay archivos HTML
-if [ -z "$html_files" ]; then
+if [ "${#html_files[@]}" -eq 0 ]; then
     echo "Error: No se encontraron archivos HTML en $html_dir"
     exit 1
 fi
@@ -34,7 +36,6 @@ output_pdf="$(pwd)/sitio_completo.pdf"
 # Convertir HTML a PDF
 # pandoc $html_files --verbose -o "$output_pdf"
 # pandoc $html_files -o "$output_pdf"
-pandoc $html_files --resource-path="$html_dir" -o "$output_pdf"
+pandoc "${html_files[@]}" --resource-path="$html_dir" -o "$output_pdf"
 
 echo "✅ PDF generado correctamente: $output_pdf"
-

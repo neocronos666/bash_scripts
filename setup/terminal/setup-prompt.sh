@@ -5,6 +5,7 @@ set -e
 FONT_NAME="JetBrainsMono Nerd Font Mono"
 FONT_DIR="$HOME/.local/share/fonts/JetBrainsMonoNerd"
 FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip"
+FONT_SHA256="${JETBRAINS_MONO_SHA256:-}"
 
 echo "==> Verificando fuente..."
 
@@ -12,11 +13,23 @@ if ! fc-list | grep -qi "JetBrainsMono Nerd Font"; then
 
     echo "==> Instalando JetBrainsMono Nerd Font..."
 
+    if [[ -z "$FONT_SHA256" ]]; then
+        echo "Falta JETBRAINS_MONO_SHA256."
+        echo "Obtenga el checksum de la versión indicada, verifíquelo en la fuente"
+        echo "oficial y vuelva a ejecutar:"
+        echo "  JETBRAINS_MONO_SHA256=<sha256> $0"
+        exit 1
+    fi
+
     TMP=$(mktemp -d)
+    trap 'rm -rf -- "$TMP"' EXIT
 
     wget -q \
         -O "$TMP/JetBrainsMono.zip" \
         "$FONT_URL"
+
+    printf '%s  %s\n' "$FONT_SHA256" "$TMP/JetBrainsMono.zip" |
+        sha256sum --check --status
 
     mkdir -p "$FONT_DIR"
 
@@ -26,7 +39,8 @@ if ! fc-list | grep -qi "JetBrainsMono Nerd Font"; then
 
     fc-cache -fv >/dev/null
 
-    rm -rf "$TMP"
+    rm -rf -- "$TMP"
+    trap - EXIT
 
     echo "Fuente instalada."
 
@@ -76,7 +90,9 @@ __nc_precmd() {
 }
 
 
-trap '__nc_preexec' DEBUG
+if [[ -z "$(trap -p DEBUG)" ]]; then
+    trap '__nc_preexec' DEBUG
+fi
 
 
 __nc_git() {
@@ -217,7 +233,10 @@ __nc_prompt() {
 }
 
 
-PROMPT_COMMAND=__nc_prompt
+case ";${PROMPT_COMMAND:-};" in
+    *";__nc_prompt;"*) ;;
+    *) PROMPT_COMMAND="__nc_prompt${PROMPT_COMMAND:+;$PROMPT_COMMAND}" ;;
+esac
 
 # <<< neocronos prompt <<<
 

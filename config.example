@@ -1,0 +1,7 @@
+# Ajuste y cargue este archivo con:
+#   source /ruta/al/config
+# Para hacerlo permanente, cargue esa ruta desde ~/.bashrc.
+
+# BASH_SCRIPTS_HOME="/ruta/al/repositorio"
+# BASH_SCRIPTS_README="/ruta/al/README.md"
+# BASH_SCRIPTS_DOWNLOADS="$HOME/Descargas/scrapped"

@@ -133,5 +133,4 @@ info "  anaconda3/pkgs        : $(human ${SIZE_PKGS_AFTER})"
 info "  ~/.cache/pip          : $(human ${SIZE_CACHE_PIP_AFTER})"
 info "  ~/.conda/pkgs         : $(human ${SIZE_CACHE_CONDA_AFTER})"
 
-ok   "Liberado aprox: $(human ${FREED_TOTAL}) (detalles en $LOG)"
-RecR
+ok   "Liberado aprox: $(human "${FREED_TOTAL}") (detalles en $LOG)"

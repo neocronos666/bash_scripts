@@ -13,7 +13,7 @@ Bash Scripts es un **frontend minimalista** de línea de comandos para el shell,
 ## 🛡️ Instalación 🛡️
 1. Clona el repositorio en tu equipo:
 ```bash
-git clone https://github.com/usuario/bash_scripts.git
+git clone https://github.com/neocronos666/bash_scripts.git
 ```
 2. Accede al directorio del proyecto:
 ```bash
@@ -30,22 +30,9 @@ export PATH="$PWD:$PATH"
    Para hacerlo permanente, agrega la línea anterior a tu `~/.bashrc` o `~/.bash_profile`.
 
 
-5. Editar el archivo `ayuda`para agregar la ruta absoluta de la ubicacion del directorio `bash_scripts`
-```bash
-nano ayuda
-```
-```bash
-# Directorio base donde están los scripts
-BASE_DIR="/home/tu-usuario/Documentos/bash_scripts"
-```
-6. Editar el archivo `ayuda.sh`para agregar la ruta absoluta de la ubicacion del archivo `README.md` (este archivo).
-    ```bash
-   nano ayuda.sh
-   ```
-```bash
-# Archivo a mostrar
-README_FILE="/home/neocronos/Documentos/bash_scripts/README.md
-```
+La ruta se detecta automáticamente. Opcionalmente puede definirse
+`BASH_SCRIPTS_HOME` para iniciar el navegador en otro directorio y
+`BASH_SCRIPTS_README` para usar otro archivo de ayuda.
 
 ## 🎉 Uso 🎉
 Para iniciar la interfaz, simplemente escribe en cualquier directorio:
@@ -85,6 +72,37 @@ Puedes:
 - Escribir un comando directamente, el cual se ejecutará en la terminal sin salir de la interfaz.
 - Presionar `0` para salir.
 
+La opción `*` puede seguir subiendo más allá del repositorio. Es una función
+intencional para usar `ayuda` como navegador de scripts del sistema.
+
+Cuando una entrada no coincide con el menú se ejecuta como una línea de Bash.
+Esto permite argumentos, pipes y redirecciones, pero también puede modificar o
+eliminar datos: revise el comando antes de confirmarlo.
+
+## Compatibilidad y dependencias
+
+El launcher requiere Bash y utilidades GNU habituales (`find`, `sort` y
+`mapfile`). Los módulos de administración están orientados a Linux; los
+instaladores actuales apuntan principalmente a Debian/Ubuntu.
+
+Cada herramienta adicional se comprueba en el script que la necesita cuando
+es posible. Entre las dependencias opcionales están `curl`, `wget`, `pandoc`,
+`yt-dlp`, `ffmpeg`, `git`, `systemd`, Docker y las herramientas de Proxmox.
+
+Los scripts de `seguridad/`, `setup/` y `tweaks/` pueden utilizar `sudo` o
+realizar cambios importantes. Lea su contenido y la confirmación mostrada
+antes de ejecutarlos.
+
+## Desarrollo y validación
+
+```bash
+make check
+```
+
+La validación comprueba la sintaxis de todos los scripts vigentes y ejecuta
+ShellCheck cuando está instalado. `.deprecated` se conserva como archivo
+histórico y no forma parte de estas comprobaciones.
+
 ## 📃 Scripts disponibles 📃
 Los scripts incluidos proporcionan diversas funcionalidades:
 
@@ -123,11 +141,14 @@ El objetivo principal de esta aplicación es proporcionar **una herramienta de l
 
 
 ## 📚 Licencia 📚
-Este proyecto está bajo una licencia que permite su uso y modificación con atribución, pero restringe su uso comercial. (Aún por definir, sugerencias bienvenidas).
+
+La licencia todavía debe ser elegida por el autor. Hasta que exista un archivo
+`LICENSE`, el repositorio no concede automáticamente permisos de copia,
+redistribución o modificación fuera de lo permitido por la legislación
+aplicable.
 
 ## 👤 Autor 👤
 Este proyecto fue desarrollado por [Sergio Silvestri](https://github.com/neocronos666).
 
 Ojalá te sea útil!🔰
-
 

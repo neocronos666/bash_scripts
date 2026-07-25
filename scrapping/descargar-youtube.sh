@@ -17,7 +17,7 @@ NC="\e[0m"
 # DIRECTORIOS
 #######################################
 
-DESTINO="$HOME/Descargas/scrapped/yt"
+DESTINO="${BASH_SCRIPTS_DOWNLOADS:-$HOME/Descargas/scrapped}/yt"
 
 VIDEO_DIR="$DESTINO"
 AUDIO_DIR="$DESTINO"
