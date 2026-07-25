@@ -19,9 +19,9 @@ ANCHO_VALOR=30
 # LIBRERIAS
 ########################################
 
-# Esta plantilla está pensada para scripts ubicados en la raíz del repositorio.
+# Esta plantilla debe copiarse dentro de un subdirectorio del repositorio.
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-BASE_DIR="$SCRIPT_DIR"
+BASE_DIR="$(dirname -- "$SCRIPT_DIR")"
 
 source "$BASE_DIR/.lib/colores.sh"
 source "$BASE_DIR/.lib/comunes.sh"
