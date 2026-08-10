@@ -1,0 +1,1108 @@
+Auditoría Linux Kernel
+Host: yarara
+Fecha: 2026-08-08T09:58:22-03:00
+Script: auditoria.sh
+
+============================================================
+1. SISTEMA
+============================================================
+
+--- Distribución ---
+NAME="Linux Mint"
+VERSION="22.2 (Zara)"
+ID=linuxmint
+ID_LIKE="ubuntu debian"
+PRETTY_NAME="Linux Mint 22.2"
+VERSION_ID="22.2"
+HOME_URL="https://www.linuxmint.com/"
+SUPPORT_URL="https://forums.linuxmint.com/"
+BUG_REPORT_URL="http://linuxmint-troubleshooting-guide.readthedocs.io/en/latest/"
+PRIVACY_POLICY_URL="https://www.linuxmint.com/"
+VERSION_CODENAME=zara
+UBUNTU_CODENAME=noble
+
+--- Kernel actual ---
+Linux yarara 6.8.0-137-generic #137-Ubuntu SMP PREEMPT_DYNAMIC Fri Jul 17 20:28:23 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+
+--- Arquitectura ---
+x86_64
+64
+
+--- Hostname ---
+ Static hostname: yarara
+       Icon name: computer-laptop
+         Chassis: laptop 💻
+      Machine ID: 78b9da99ada949698f80ea7d9d16ae77
+         Boot ID: d6d9b26f476e4c03b82ffab785ccbb3b
+Operating System: Linux Mint 22.2
+          Kernel: Linux 6.8.0-137-generic
+    Architecture: x86-64
+ Hardware Vendor: HP
+  Hardware Model: HP Notebook
+Firmware Version: F.33
+   Firmware Date: Mon 2018-07-30
+    Firmware Age: 8y 1w 2d
+
+--- Uptime ---
+ 09:58:22 up 3 days, 11:51,  1 user,  load average: 2,16, 1,59, 1,70
+
+============================================================
+2. CPU Y PLATAFORMA
+============================================================
+
+--- CPU ---
+Arquitectura:                             x86_64
+modo(s) de operación de las CPUs:         32-bit, 64-bit
+Tamaños de las direcciones:               40 bits physical, 48 bits virtual
+Orden de los bytes:                       Little Endian
+CPU(s):                                   4
+Lista de la(s) CPU(s) en línea:           0-3
+ID de fabricante:                         AuthenticAMD
+Nombre del modelo:                        AMD A8-7410 APU with AMD Radeon R5 Graphics
+Familia de CPU:                           22
+Modelo:                                   48
+Hilo(s) de procesamiento por núcleo:      1
+Núcleo(s) por «socket»:                   4
+«Socket(s)»:                              1
+Revisión:                                 1
+Aumento de frecuencia:                    activada
+CPU(s) factor de escala MHz:              96%
+CPU MHz máx.:                             2200,0000
+CPU MHz mín.:                             1000,0000
+BogoMIPS:                                 4391,74
+Indicadores:                              fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good acc_power nopl nonstop_tsc cpuid extd_apicid aperfmperf pni pclmulqdq monitor ssse3 cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt topoext perfctr_nb bpext ptsc perfctr_llc cpb hw_pstate ssbd ibpb vmmcall bmi1 xsaveopt arat npt lbrv svm_lock nrip_save tsc_scale flushbyasid decodeassists pausefilter pfthreshold overflow_recov
+Virtualización:                           AMD-V
+Caché L1d:                                128 KiB (4 instancias)
+Caché L1i:                                128 KiB (4 instancias)
+Caché L2:                                 2 MiB (1 instancia)
+Modo(s) NUMA:                             1
+CPU(s) del nodo NUMA 0:                   0-3
+Vulnerabilidad Gather data sampling:      Not affected
+Vulnerabilidad Indirect target selection: Not affected
+Vulnerabilidad Itlb multihit:             Not affected
+Vulnerabilidad L1tf:                      Not affected
+Vulnerabilidad Mds:                       Not affected
+Vulnerabilidad Meltdown:                  Not affected
+Vulnerabilidad Mmio stale data:           Not affected
+Vulnerabilidad Reg file data sampling:    Not affected
+Vulnerabilidad Retbleed:                  Mitigation; untrained return thunk; SMT disabled
+Vulnerabilidad Spec rstack overflow:      Not affected
+Vulnerabilidad Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerabilidad Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerabilidad Spectre v2:                Mitigation; Retpolines; IBPB conditional; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected
+Vulnerabilidad Srbds:                     Not affected
+Vulnerabilidad Tsa:                       Not affected
+Vulnerabilidad Tsx async abort:           Not affected
+Vulnerabilidad Vmscape:                   Not affected
+
+--- Información resumida /proc/cpuinfo ---
+vendor_id	: AuthenticAMD
+cpu family	: 22
+model		: 48
+model name	: AMD A8-7410 APU with AMD Radeon R5 Graphics
+stepping	: 1
+microcode	: 0x7030106
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good acc_power nopl nonstop_tsc cpuid extd_apicid aperfmperf pni pclmulqdq monitor ssse3 cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt topoext perfctr_nb bpext ptsc perfctr_llc cpb hw_pstate ssbd ibpb vmmcall bmi1 xsaveopt arat npt lbrv svm_lock nrip_save tsc_scale flushbyasid decodeassists pausefilter pfthreshold overflow_recov
+vendor_id	: AuthenticAMD
+cpu family	: 22
+model		: 48
+model name	: AMD A8-7410 APU with AMD Radeon R5 Graphics
+stepping	: 1
+microcode	: 0x7030106
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good acc_power nopl nonstop_tsc cpuid extd_apicid aperfmperf pni pclmulqdq monitor ssse3 cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt topoext perfctr_nb bpext ptsc perfctr_llc cpb hw_pstate ssbd ibpb vmmcall bmi1 xsaveopt arat npt lbrv svm_lock nrip_save tsc_scale flushbyasid decodeassists pausefilter pfthreshold overflow_recov
+vendor_id	: AuthenticAMD
+cpu family	: 22
+model		: 48
+model name	: AMD A8-7410 APU with AMD Radeon R5 Graphics
+stepping	: 1
+microcode	: 0x7030106
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good acc_power nopl nonstop_tsc cpuid extd_apicid aperfmperf pni pclmulqdq monitor ssse3 cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt topoext perfctr_nb bpext ptsc perfctr_llc cpb hw_pstate ssbd ibpb vmmcall bmi1 xsaveopt arat npt lbrv svm_lock nrip_save tsc_scale flushbyasid decodeassists pausefilter pfthreshold overflow_recov
+vendor_id	: AuthenticAMD
+cpu family	: 22
+model		: 48
+model name	: AMD A8-7410 APU with AMD Radeon R5 Graphics
+stepping	: 1
+microcode	: 0x7030106
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good acc_power nopl nonstop_tsc cpuid extd_apicid aperfmperf pni pclmulqdq monitor ssse3 cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt topoext perfctr_nb bpext ptsc perfctr_llc cpb hw_pstate ssbd ibpb vmmcall bmi1 xsaveopt arat npt lbrv svm_lock nrip_save tsc_scale flushbyasid decodeassists pausefilter pfthreshold overflow_recov
+
+--- Virtualización ---
+none
+
+--- DMI / BIOS / UEFI ---
+Arranque actual: UEFI
+sys_vendor          : HP
+product_name        : HP Notebook
+product_version     : Type1ProductConfigId
+board_vendor        : HP
+board_name          : 82F6
+board_version       : 40.43
+bios_vendor         : Insyde
+bios_version        : F.33
+bios_date           : 07/30/2018
+
+============================================================
+3. HARDWARE
+============================================================
+
+--- PCI ---
+00:00.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Family 16h (Models 30h-3fh) Processor Root Complex [1022:1566]
+	Subsystem: Hewlett-Packard Company Family 16h (Models 30h-3fh) Processor Root Complex [103c:82f6]
+00:01.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Mullins [Radeon R4/R5 Graphics] [1002:9851] (rev 45)
+	DeviceName: ATI EG BROADWAY
+	Subsystem: Hewlett-Packard Company Mullins [Radeon R4/R5 Graphics] [103c:82f6]
+	Kernel driver in use: radeon
+	Kernel modules: radeon, amdgpu
+00:01.1 Audio device [0403]: Advanced Micro Devices, Inc. [AMD/ATI] Kabini HDMI/DP Audio [1002:9840]
+	Subsystem: Hewlett-Packard Company Kabini HDMI/DP Audio [103c:82f6]
+	Kernel driver in use: snd_hda_intel
+	Kernel modules: snd_hda_intel
+00:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Family 16h (Models 30h-3fh) Host Bridge [1022:156b]
+00:02.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Family 16h Processor Functions 5:1 [1022:1439]
+	Subsystem: Hewlett-Packard Company Family 16h Processor Functions 5:1 [103c:82f6]
+	Kernel driver in use: pcieport
+00:02.4 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Family 16h Processor Functions 5:1 [1022:1439]
+	Subsystem: Hewlett-Packard Company Family 16h Processor Functions 5:1 [103c:82f6]
+	Kernel driver in use: pcieport
+00:02.5 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Family 16h Processor Functions 5:1 [1022:1439]
+	Subsystem: Hewlett-Packard Company Family 16h Processor Functions 5:1 [103c:82f6]
+	Kernel driver in use: pcieport
+00:08.0 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Kabini/Mullins PSP-Platform Security Processor [1022:1537]
+	Subsystem: Hewlett-Packard Company Kabini/Mullins PSP-Platform Security Processor [103c:82f6]
+	Kernel driver in use: ccp
+	Kernel modules: ccp
+00:10.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller [1022:7814] (rev 11)
+	Subsystem: Hewlett-Packard Company FCH USB XHCI Controller [103c:82f6]
+	Kernel driver in use: xhci_hcd
+	Kernel modules: xhci_pci
+00:11.0 SATA controller [0106]: Advanced Micro Devices, Inc. [AMD] FCH SATA Controller [AHCI mode] [1022:7804] (rev 39)
+	Subsystem: Hewlett-Packard Company FCH SATA Controller [AHCI mode] [103c:82f6]
+	Kernel driver in use: ahci
+	Kernel modules: ahci
+00:12.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] FCH USB EHCI Controller [1022:7808] (rev 39)
+	Subsystem: Hewlett-Packard Company FCH USB EHCI Controller [103c:82f6]
+	Kernel driver in use: ehci-pci
+00:13.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] FCH USB EHCI Controller [1022:7808] (rev 39)
+	Subsystem: Hewlett-Packard Company FCH USB EHCI Controller [103c:82f6]
+	Kernel driver in use: ehci-pci
+00:14.0 SMBus [0c05]: Advanced Micro Devices, Inc. [AMD] FCH SMBus Controller [1022:780b] (rev 42)
+	Subsystem: Hewlett-Packard Company FCH SMBus Controller [103c:82f6]
+	Kernel modules: i2c_piix4, sp5100_tco
+00:14.2 Audio device [0403]: Advanced Micro Devices, Inc. [AMD] FCH Azalia Controller [1022:780d] (rev 02)
+	Subsystem: Hewlett-Packard Company FCH Azalia Controller [103c:82f6]
+	Kernel driver in use: snd_hda_intel
+	Kernel modules: snd_hda_intel
+00:14.3 ISA bridge [0601]: Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge [1022:780e] (rev 11)
+	Subsystem: Hewlett-Packard Company FCH LPC Bridge [103c:82f6]
+00:14.7 SD Host controller [0805]: Advanced Micro Devices, Inc. [AMD] FCH SD Flash Controller [1022:7813] (rev 01)
+	Subsystem: Hewlett-Packard Company FCH SD Flash Controller [103c:82f6]
+	Kernel driver in use: sdhci-pci
+	Kernel modules: sdhci_pci
+00:18.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Family 16h (Models 30h-3fh) Processor Function 0 [1022:1580]
+00:18.1 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Family 16h (Models 30h-3fh) Processor Function 1 [1022:1581]
+00:18.2 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Family 16h (Models 30h-3fh) Processor Function 2 [1022:1582]
+00:18.3 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Family 16h (Models 30h-3fh) Processor Function 3 [1022:1583]
+	Kernel driver in use: k10temp
+	Kernel modules: k10temp
+00:18.4 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Family 16h (Models 30h-3fh) Processor Function 4 [1022:1584]
+	Kernel driver in use: fam15h_power
+	Kernel modules: fam15h_power
+00:18.5 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Family 16h (Models 30h-3fh) Processor Function 5 [1022:1585]
+02:00.0 Network controller [0280]: Realtek Semiconductor Co., Ltd. RTL8723BE PCIe Wireless Network Adapter [10ec:b723]
+	DeviceName: Sanji2
+	Subsystem: Hewlett-Packard Company RTL8723BE PCIe Wireless Network Adapter [103c:81c1]
+	Kernel driver in use: rtl8723be
+	Kernel modules: rtl8723be
+03:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd. RTL810xE PCI Express Fast Ethernet controller [10ec:8136] (rev 07)
+	Subsystem: Hewlett-Packard Company RTL810xE PCI Express Fast Ethernet controller [103c:81f5]
+	Kernel driver in use: r8169
+	Kernel modules: r8169
+
+--- USB ---
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 001 Device 002: ID 0438:7900 Advanced Micro Devices, Inc. Root Hub
+Bus 001 Device 003: ID 0bda:b008 Realtek Semiconductor Corp. Bluetooth Radio 
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 002: ID 0438:7900 Advanced Micro Devices, Inc. Root Hub
+Bus 002 Device 003: ID 04f2:b56c Chicony Electronics Co., Ltd HP TrueVision HD
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 004: ID 258a:002a SINO WEALTH Gaming KB 
+Bus 003 Device 005: ID 1d57:ad17 Xenta Gaming Mouse
+Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+
+--- Bloques / discos ---
+NAME   PATH      TYPE   SIZE FSTYPE FSVER MOUNTPOINTS      MODEL                 SERIAL              TRAN
+sda    /dev/sda  disk 476,9G                               Patriot P210 512GB    P210FBBA23101924013 sata
+├─sda1 /dev/sda1 part   100M vfat   FAT32 /boot/efi                                                  
+├─sda2 /dev/sda2 part    16M                                                                         
+├─sda3 /dev/sda3 part 383,1G ntfs                                                                    
+├─sda4 /dev/sda4 part   565M ntfs                                                                    
+└─sda5 /dev/sda5 part  93,1G ext4   1.0   /                                                          
+sdb    /dev/sdb  disk 465,8G                               ST500LM012 HN-M500MBB S2R7J9DD401817      sata
+└─sdb1 /dev/sdb1 part 465,8G ext4   1.0   /media/neocronos                                           
+
+--- Controladores gráficos ---
+00:01.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Mullins [Radeon R4/R5 Graphics] [1002:9851] (rev 45)
+	DeviceName: ATI EG BROADWAY
+	Subsystem: Hewlett-Packard Company Mullins [Radeon R4/R5 Graphics] [103c:82f6]
+	Kernel driver in use: radeon
+	Kernel modules: radeon, amdgpu
+
+--- Red ---
+02:00.0 Network controller [0280]: Realtek Semiconductor Co., Ltd. RTL8723BE PCIe Wireless Network Adapter [10ec:b723]
+	DeviceName: Sanji2
+	Subsystem: Hewlett-Packard Company RTL8723BE PCIe Wireless Network Adapter [103c:81c1]
+	Kernel driver in use: rtl8723be
+	Kernel modules: rtl8723be
+03:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd. RTL810xE PCI Express Fast Ethernet controller [10ec:8136] (rev 07)
+	Subsystem: Hewlett-Packard Company RTL810xE PCI Express Fast Ethernet controller [103c:81f5]
+	Kernel driver in use: r8169
+	Kernel modules: r8169
+
+--- Audio ---
+00:01.1 Audio device [0403]: Advanced Micro Devices, Inc. [AMD/ATI] Kabini HDMI/DP Audio [1002:9840]
+	Subsystem: Hewlett-Packard Company Kabini HDMI/DP Audio [103c:82f6]
+	Kernel driver in use: snd_hda_intel
+	Kernel modules: snd_hda_intel
+00:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Family 16h (Models 30h-3fh) Host Bridge [1022:156b]
+--
+00:14.2 Audio device [0403]: Advanced Micro Devices, Inc. [AMD] FCH Azalia Controller [1022:780d] (rev 02)
+	Subsystem: Hewlett-Packard Company FCH Azalia Controller [103c:82f6]
+	Kernel driver in use: snd_hda_intel
+	Kernel modules: snd_hda_intel
+00:14.3 ISA bridge [0601]: Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge [1022:780e] (rev 11)
+
+============================================================
+4. KERNEL INSTALADO
+============================================================
+
+--- Versión activa ---
+6.8.0-137-generic
+
+--- Kernels presentes en /boot ---
+-rw-r--r-- 1 root root 281K jul  1 16:48 config-6.8.0-136-generic
+-rw-r--r-- 1 root root 281K jul 17 10:44 config-6.8.0-137-generic
+-rw-r--r-- 1 root root 281K jun  7  2024 config-6.8.0-38-generic
+-rw-r--r-- 1 root root 281K ene 10  2025 config-6.8.0-52-generic
+-rw-r--r-- 1 root root 281K feb  7  2025 config-6.8.0-54-generic
+-rw-r--r-- 1 root root 281K feb 12  2025 config-6.8.0-55-generic
+-rw-r--r-- 1 root root 281K feb 14  2025 config-6.8.0-56-generic
+-rw-r--r-- 1 root root 281K mar 14  2025 config-6.8.0-57-generic
+-rw-r--r-- 1 root root 281K mar 14  2025 config-6.8.0-58-generic
+-rw-r--r-- 1 root root 281K abr 11  2025 config-6.8.0-59-generic
+-rw-r--r-- 1 root root 281K abr 15  2025 config-6.8.0-60-generic
+-rw-r--r-- 1 root root 281K may 19  2025 config-6.8.0-62-generic
+-rw-r--r-- 1 root root 281K jun 13  2025 config-6.8.0-63-generic
+-rw-r--r-- 1 root root 281K jun 15  2025 config-6.8.0-64-generic
+-rw-r--r-- 1 root root 281K jul 22  2025 config-6.8.0-71-generic
+-rw-r--r-- 1 root root 281K ago 12  2025 config-6.8.0-78-generic
+-rw-r--r-- 1 root root 281K ago 12  2025 config-6.8.0-79-generic
+-rw-r--r-- 1 root root 281K sep 18  2025 config-6.8.0-85-generic
+-rw-r--r-- 1 root root 281K oct 10  2025 config-6.8.0-87-generic
+-rw-r--r-- 1 root root 281K nov 18  2025 config-6.8.0-90-generic
+lrwxrwxrwx 1 root root   28 ago  4 18:00 initrd.img -> initrd.img-6.8.0-137-generic
+-rw-r--r-- 1 root root  79M jul 17 00:55 initrd.img-6.8.0-136-generic
+-rw-r--r-- 1 root root  79M ago  4 18:01 initrd.img-6.8.0-137-generic
+lrwxrwxrwx 1 root root   28 ago  4 18:00 initrd.img.old -> initrd.img-6.8.0-136-generic
+-rw------- 1 root root 8,8M jul  1 16:48 System.map-6.8.0-136-generic
+-rw------- 1 root root 8,8M jul 17 10:44 System.map-6.8.0-137-generic
+-rw------- 1 root root 8,7M jun  7  2024 System.map-6.8.0-38-generic
+-rw------- 1 root root 8,7M ene 10  2025 System.map-6.8.0-52-generic
+-rw------- 1 root root 8,7M feb  7  2025 System.map-6.8.0-54-generic
+-rw------- 1 root root 8,7M feb 12  2025 System.map-6.8.0-55-generic
+-rw------- 1 root root 8,7M feb 14  2025 System.map-6.8.0-56-generic
+-rw------- 1 root root 8,7M mar 14  2025 System.map-6.8.0-57-generic
+-rw------- 1 root root 8,7M mar 14  2025 System.map-6.8.0-58-generic
+-rw------- 1 root root 8,7M abr 11  2025 System.map-6.8.0-59-generic
+-rw------- 1 root root 8,7M abr 15  2025 System.map-6.8.0-60-generic
+-rw------- 1 root root 8,7M may 19  2025 System.map-6.8.0-62-generic
+-rw------- 1 root root 8,7M jun 13  2025 System.map-6.8.0-63-generic
+-rw------- 1 root root 8,7M jun 15  2025 System.map-6.8.0-64-generic
+-rw------- 1 root root 8,7M jul 22  2025 System.map-6.8.0-71-generic
+-rw------- 1 root root 8,7M ago 12  2025 System.map-6.8.0-78-generic
+-rw------- 1 root root 8,7M ago 12  2025 System.map-6.8.0-79-generic
+-rw------- 1 root root 8,7M sep 18  2025 System.map-6.8.0-85-generic
+-rw------- 1 root root 8,7M oct 10  2025 System.map-6.8.0-87-generic
+-rw------- 1 root root 8,7M nov 18  2025 System.map-6.8.0-90-generic
+lrwxrwxrwx 1 root root   25 ago  4 18:00 vmlinuz -> vmlinuz-6.8.0-137-generic
+-rw------- 1 root root  15M jul  1 16:50 vmlinuz-6.8.0-136-generic
+-rw------- 1 root root  15M jul 17 13:50 vmlinuz-6.8.0-137-generic
+lrwxrwxrwx 1 root root   25 ago  4 18:00 vmlinuz.old -> vmlinuz-6.8.0-136-generic
+
+--- Paquetes kernel instalados ---
+ii  linux-generic                                  6.8.0-137.137                                    amd64        Complete Generic Linux kernel and headers
+ii  linux-headers-6.8.0-136                        6.8.0-136.136                                    all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-136-generic                6.8.0-136.136                                    amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-137                        6.8.0-137.137                                    all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-137-generic                6.8.0-137.137                                    amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-38                         6.8.0-38.38                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-38-generic                 6.8.0-38.38                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-52                         6.8.0-52.53                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-52-generic                 6.8.0-52.53                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-54                         6.8.0-54.56                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-54-generic                 6.8.0-54.56                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-55                         6.8.0-55.57                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-55-generic                 6.8.0-55.57                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-56                         6.8.0-56.58                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-56-generic                 6.8.0-56.58                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-57                         6.8.0-57.59                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-57-generic                 6.8.0-57.59                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-58                         6.8.0-58.60                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-58-generic                 6.8.0-58.60                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-59                         6.8.0-59.61                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-59-generic                 6.8.0-59.61                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-60                         6.8.0-60.63                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-60-generic                 6.8.0-60.63                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-62                         6.8.0-62.65                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-62-generic                 6.8.0-62.65                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-63                         6.8.0-63.66                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-63-generic                 6.8.0-63.66                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-64                         6.8.0-64.67                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-64-generic                 6.8.0-64.67                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-71                         6.8.0-71.71                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-71-generic                 6.8.0-71.71                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-78                         6.8.0-78.78                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-78-generic                 6.8.0-78.78                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-79                         6.8.0-79.79                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-79-generic                 6.8.0-79.79                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-85                         6.8.0-85.85                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-85-generic                 6.8.0-85.85                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-87                         6.8.0-87.88                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-87-generic                 6.8.0-87.88                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-6.8.0-90                         6.8.0-90.91                                      all          Header files related to Linux kernel version 6.8.0
+ii  linux-headers-6.8.0-90-generic                 6.8.0-90.91                                      amd64        Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
+ii  linux-headers-generic                          6.8.0-137.137                                    amd64        Generic Linux kernel headers
+ii  linux-image-6.8.0-136-generic                  6.8.0-136.136                                    amd64        Signed kernel image generic
+ii  linux-image-6.8.0-137-generic                  6.8.0-137.137                                    amd64        Signed kernel image generic
+ii  linux-image-generic                            6.8.0-137.137                                    amd64        Generic Linux kernel image
+ii  linux-modules-6.8.0-136-generic                6.8.0-136.136                                    amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-137-generic                6.8.0-137.137                                    amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-38-generic                 6.8.0-38.38                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-52-generic                 6.8.0-52.53                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-54-generic                 6.8.0-54.56                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-55-generic                 6.8.0-55.57                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-56-generic                 6.8.0-56.58                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-57-generic                 6.8.0-57.59                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-58-generic                 6.8.0-58.60                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-59-generic                 6.8.0-59.61                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-60-generic                 6.8.0-60.63                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-62-generic                 6.8.0-62.65                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-63-generic                 6.8.0-63.66                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-64-generic                 6.8.0-64.67                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-71-generic                 6.8.0-71.71                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-78-generic                 6.8.0-78.78                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-79-generic                 6.8.0-79.79                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-85-generic                 6.8.0-85.85                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-87-generic                 6.8.0-87.88                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-6.8.0-90-generic                 6.8.0-90.91                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-136-generic          6.8.0-136.136                                    amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-137-generic          6.8.0-137.137                                    amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-38-generic           6.8.0-38.38                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-52-generic           6.8.0-52.53                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-54-generic           6.8.0-54.56                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-55-generic           6.8.0-55.57                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-56-generic           6.8.0-56.58                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-57-generic           6.8.0-57.59                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-58-generic           6.8.0-58.60                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-59-generic           6.8.0-59.61                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-60-generic           6.8.0-60.63                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-62-generic           6.8.0-62.65                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-63-generic           6.8.0-63.66                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-64-generic           6.8.0-64.67                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-71-generic           6.8.0-71.71                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-78-generic           6.8.0-78.78                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-79-generic           6.8.0-79.79                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-85-generic           6.8.0-85.85                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-87-generic           6.8.0-87.88                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+ii  linux-modules-extra-6.8.0-90-generic           6.8.0-90.91                                      amd64        Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
+
+--- Módulos cargados ---
+Module                  Size  Used by
+ufs                   126976  0
+qnx4                   12288  0
+hfsplus               143360  0
+hfs                    81920  0
+minix                  49152  0
+ntfs                  139264  0
+msdos                  16384  0
+jfs                   299008  0
+nls_ucs2_utils          8192  1 jfs
+xfs                  2371584  0
+nf_conntrack_netlink    61440  0
+xt_nat                 12288  9
+veth                   45056  0
+xt_MASQUERADE          16384  2
+bridge                425984  0
+stp                    12288  1 bridge
+llc                    16384  2 bridge,stp
+xfrm_user              61440  1
+xfrm_algo              16384  1 xfrm_user
+xt_set                 20480  0
+ip_set                 61440  1 xt_set
+nft_chain_nat          12288  9
+nf_nat                 61440  3 xt_nat,nft_chain_nat,xt_MASQUERADE
+vboxnetadp             28672  0
+vboxnetflt             32768  0
+wireguard             114688  0
+curve25519_x86_64      36864  1 wireguard
+libchacha20poly1305    16384  1 wireguard
+chacha_x86_64          32768  1 libchacha20poly1305
+poly1305_x86_64        28672  1 libchacha20poly1305
+libcurve25519_generic    49152  2 curve25519_x86_64,wireguard
+libchacha              12288  1 chacha_x86_64
+vboxdrv               696320  2 vboxnetadp,vboxnetflt
+vxlan                 155648  0
+ip6_udp_tunnel         16384  2 wireguard,vxlan
+udp_tunnel             32768  2 wireguard,vxlan
+rfcomm                102400  16
+snd_seq_dummy          12288  0
+snd_hrtimer            12288  1
+overlay               212992  2
+qrtr                   53248  2
+cmac                   12288  3
+algif_hash             12288  1
+algif_skcipher         12288  1
+af_alg                 32768  6 algif_hash,algif_skcipher
+bnep                   32768  2
+ip6t_REJECT            12288  1
+nf_reject_ipv6         24576  1 ip6t_REJECT
+xt_hl                  12288  22
+ip6t_rt                16384  3
+ipt_REJECT             12288  1
+nf_reject_ipv4         12288  1 ipt_REJECT
+xt_LOG                 16384  8
+nf_log_syslog          20480  8
+nft_limit              16384  11
+xt_limit               12288  0
+xt_addrtype            12288  8
+xt_tcpudp              16384  60
+xt_conntrack           12288  22
+nf_conntrack          200704  5 xt_conntrack,nf_nat,xt_nat,nf_conntrack_netlink,xt_MASQUERADE
+nf_defrag_ipv6         24576  1 nf_conntrack
+nf_defrag_ipv4         12288  1 nf_conntrack
+nft_compat             20480  136
+nf_tables             380928  846 nft_compat,nft_chain_nat,nft_limit
+binfmt_misc            24576  1
+zfs                  6602752  6
+spl                   180224  1 zfs
+amdgpu              17178624  0
+amdxcp                 12288  1 amdgpu
+drm_exec               12288  1 amdgpu
+gpu_sched              61440  1 amdgpu
+drm_buddy              20480  1 amdgpu
+snd_ctl_led            24576  0
+ledtrig_audio          12288  1 snd_ctl_led
+snd_hda_codec_realtek   212992  1
+snd_hda_codec_generic   122880  1 snd_hda_codec_realtek
+snd_hda_codec_hdmi     94208  1
+snd_hda_intel          61440  2
+snd_intel_dspcfg       36864  1 snd_hda_intel
+snd_intel_sdw_acpi     16384  1 snd_intel_dspcfg
+snd_hda_codec         204800  4 snd_hda_codec_generic,snd_hda_codec_hdmi,snd_hda_intel,snd_hda_codec_realtek
+rtl8723be             176128  0
+snd_hda_core          139264  5 snd_hda_codec_generic,snd_hda_codec_hdmi,snd_hda_intel,snd_hda_codec,snd_hda_codec_realtek
+radeon               2174976  16
+btcoexist             290816  1 rtl8723be
+snd_hwdep              20480  1 snd_hda_codec
+uvcvideo              147456  0
+snd_pcm               192512  4 snd_hda_codec_hdmi,snd_hda_intel,snd_hda_codec,snd_hda_core
+rtl8723_common         24576  1 rtl8723be
+edac_mce_amd           28672  0
+videobuf2_vmalloc      20480  1 uvcvideo
+rtl_pci                40960  1 rtl8723be
+uvc                    12288  1 uvcvideo
+videobuf2_memops       16384  1 videobuf2_vmalloc
+btusb                  81920  0
+kvm_amd               212992  0
+videobuf2_v4l2         36864  1 uvcvideo
+snd_seq_midi           24576  0
+rtlwifi               139264  4 rtl_pci,rtl8723be,btcoexist,rtl8723_common
+btrtl                  32768  1 btusb
+snd_seq_midi_event     16384  1 snd_seq_midi
+btintel                57344  1 btusb
+snd_rawmidi            57344  1 snd_seq_midi
+drm_suballoc_helper    16384  2 amdgpu,radeon
+btbcm                  24576  1 btusb
+videodev              352256  2 videobuf2_v4l2,uvcvideo
+btmtk                  12288  1 btusb
+drm_ttm_helper         12288  2 amdgpu,radeon
+nls_iso8859_1          12288  1
+mac80211             1744896  3 rtl_pci,rtl8723be,rtlwifi
+kvm                  1404928  1 kvm_amd
+snd_seq               118784  9 snd_seq_midi,snd_seq_midi_event,snd_seq_dummy
+bluetooth            1040384  44 btrtl,btmtk,btintel,btbcm,bnep,btusb,rfcomm
+videobuf2_common       81920  4 videobuf2_vmalloc,videobuf2_v4l2,uvcvideo,videobuf2_memops
+hp_bioscfg             81920  0
+snd_seq_device         16384  3 snd_seq,snd_seq_midi,snd_rawmidi
+mc                     81920  4 videodev,videobuf2_v4l2,uvcvideo,videobuf2_common
+ttm                   110592  3 amdgpu,radeon,drm_ttm_helper
+hp_wmi                 36864  0
+snd_timer              49152  3 snd_seq,snd_hrtimer,snd_pcm
+sparse_keymap          12288  1 hp_wmi
+ecdh_generic           16384  2 bluetooth
+ecc                    45056  1 ecdh_generic
+wmi_bmof               12288  0
+irqbypass              12288  1 kvm
+platform_profile       12288  1 hp_wmi
+firmware_attributes_class    12288  1 hp_bioscfg
+drm_display_helper    237568  2 amdgpu,radeon
+fam15h_power           20480  0
+k10temp                16384  0
+cfg80211             1368064  2 rtlwifi,mac80211
+i2c_piix4              32768  0
+snd                   143360  18 snd_ctl_led,snd_hda_codec_generic,snd_seq,snd_seq_device,snd_hda_codec_hdmi,snd_hwdep,snd_hda_intel,snd_hda_codec,snd_hda_codec_realtek,snd_timer,snd_pcm,snd_rawmidi
+cec                    94208  1 drm_display_helper
+ccp                   147456  5 kvm_amd
+rc_core                73728  1 cec
+libarc4                12288  1 mac80211
+i2c_algo_bit           16384  2 amdgpu,radeon
+soundcore              16384  2 snd_ctl_led,snd
+i2c_scmi               16384  0
+wireless_hotkey        12288  0
+input_leds             12288  0
+joydev                 32768  0
+serio_raw              20480  0
+mac_hid                12288  0
+sch_fq_codel           24576  2
+msr                    12288  0
+parport_pc             53248  0
+ppdev                  24576  0
+lp                     28672  0
+parport                73728  3 parport_pc,lp,ppdev
+efi_pstore             12288  0
+nfnetlink              20480  6 nft_compat,nf_conntrack_netlink,nf_tables,ip_set
+dmi_sysfs              24576  0
+ip_tables              32768  0
+x_tables               65536  14 xt_conntrack,nft_compat,xt_LOG,xt_tcpudp,xt_addrtype,xt_nat,ip6t_rt,xt_set,ipt_REJECT,ip_tables,xt_limit,xt_hl,xt_MASQUERADE,ip6t_REJECT
+autofs4                57344  2
+btrfs                2056192  0
+blake2b_generic        24576  0
+raid10                 77824  0
+raid456               196608  0
+async_raid6_recov      20480  1 raid456
+async_memcpy           16384  2 raid456,async_raid6_recov
+async_pq               20480  2 raid456,async_raid6_recov
+async_xor              16384  3 async_pq,raid456,async_raid6_recov
+async_tx               16384  5 async_pq,async_memcpy,async_xor,raid456,async_raid6_recov
+xor                    20480  2 async_xor,btrfs
+raid6_pq              126976  4 async_pq,btrfs,raid456,async_raid6_recov
+libcrc32c              12288  6 nf_conntrack,nf_nat,btrfs,nf_tables,xfs,raid456
+raid1                  61440  0
+raid0                  24576  0
+dm_mirror              24576  0
+dm_region_hash         24576  1 dm_mirror
+dm_log                 20480  2 dm_region_hash,dm_mirror
+hid_generic            12288  0
+usbhid                 77824  0
+hid                   180224  2 usbhid,hid_generic
+crct10dif_pclmul       12288  1
+crc32_pclmul           12288  0
+polyval_clmulni        12288  0
+polyval_generic        12288  1 polyval_clmulni
+ghash_clmulni_intel    16384  0
+sha256_ssse3           32768  0
+sha1_ssse3             32768  0
+sdhci_pci              94208  0
+r8169                 118784  0
+cqhci                  40960  1 sdhci_pci
+ahci                   49152  3
+xhci_pci               24576  0
+realtek                36864  1
+sdhci                  90112  1 sdhci_pci
+libahci                53248  1 ahci
+psmouse               217088  0
+xhci_pci_renesas       20480  1 xhci_pci
+video                  77824  2 amdgpu,radeon
+wmi                    28672  4 hp_wmi,video,hp_bioscfg,wmi_bmof
+aesni_intel           356352  4
+crypto_simd            16384  1 aesni_intel
+cryptd                 24576  3 crypto_simd,ghash_clmulni_intel
+
+--- Módulos externos / DKMS ---
+virtualbox/7.0.16, 6.8.0-136-generic, x86_64: installed
+virtualbox/7.0.16, 6.8.0-137-generic, x86_64: installed
+
+--- Árbol de módulos ---
+155M	/lib/modules/6.8.0-137-generic
+Cantidad de módulos: 6477
+
+--- Módulos no pertenecientes al árbol estándar ---
+vboxnetadp                     /lib/modules/6.8.0-137-generic/updates/dkms/vboxnetadp.ko.zst
+vboxnetflt                     /lib/modules/6.8.0-137-generic/updates/dkms/vboxnetflt.ko.zst
+vboxdrv                        /lib/modules/6.8.0-137-generic/updates/dkms/vboxdrv.ko.zst
+
+============================================================
+5. CONFIGURACIÓN DEL KERNEL
+============================================================
+
+--- Config del kernel activo ---
+Archivo: /boot/config-6.8.0-137-generic
+
+CONFIG_LOCALVERSION=""
+CONFIG_BPF=y
+CONFIG_PREEMPT_DYNAMIC=y
+CONFIG_X86_64=y
+CONFIG_SMP=y
+CONFIG_EFI=y
+CONFIG_EFI_STUB=y
+CONFIG_ACPI=y
+CONFIG_KVM=m
+CONFIG_MODULES=y
+CONFIG_MODVERSIONS=y
+CONFIG_MODULE_SIG=y
+CONFIG_SECURITY=y
+CONFIG_DEBUG_INFO=y
+
+============================================================
+6. BOOT / GRUB / SECURE BOOT
+============================================================
+
+--- Modo de arranque ---
+UEFI
+
+--- Secure Boot ---
+SecureBoot disabled
+
+--- EFI ---
+EFI variables disponibles.
+
+--- GRUB defaults ---
+# If you change this file, run 'update-grub' afterwards to update
+# /boot/grub/grub.cfg.
+# For full documentation of the options in this file, see:
+#   info -f grub -n 'Simple configuration'
+
+GRUB_DEFAULT=0
+GRUB_TIMEOUT_STYLE=menu
+GRUB_TIMEOUT=10
+GRUB_DISTRIBUTOR=`( . /etc/os-release; echo ${NAME:-Ubuntu} ) 2>/dev/null || echo Ubuntu`
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+GRUB_CMDLINE_LINUX=""
+
+# If your computer has multiple operating systems installed, then you
+# probably want to run os-prober. However, if your computer is a host
+# for guest OSes installed via LVM or raw disk devices, running
+# os-prober can cause damage to those guest OSes as it mounts
+# filesystems to look for things.
+GRUB_DISABLE_OS_PROBER=false
+
+# Uncomment to enable BadRAM filtering, modify to suit your needs
+# This works with Linux (no patch required) and with any kernel that obtains
+# the memory map information from GRUB (GNU Mach, kernel of FreeBSD ...)
+#GRUB_BADRAM="0x01234567,0xfefefefe,0x89abcdef,0xefefefef"
+
+# Uncomment to disable graphical terminal
+#GRUB_TERMINAL=console
+
+# The resolution used on graphical terminal
+# note that you can use only modes which your graphic card supports via VBE
+# you can see them in real GRUB with the command `vbeinfo'
+#GRUB_GFXMODE=640x480
+
+# Uncomment if you don't want GRUB to pass "root=UUID=xxx" parameter to Linux
+#GRUB_DISABLE_LINUX_UUID=true
+
+# Uncomment to disable generation of recovery mode menu entries
+#GRUB_DISABLE_RECOVERY="true"
+
+# Uncomment to get a beep at grub start
+#GRUB_INIT_TUNE="480 440 1"
+
+--- Entradas GRUB detectadas ---
+No se encontró grub.cfg.
+
+--- Entradas EFI ---
+BootCurrent: 0002
+Timeout: 0 seconds
+BootOrder: 0002,3002,0001,2001,2002,2004
+Boot0001* Windows Boot Manager	HD(1,GPT,866d2014-3735-417d-9381-0721dd3ad5ef,0x800,0x32000)/File(\EFI\Microsoft\Boot\bootmgfw.efi)57494e444f5753000100000088000000780000004200430044004f0042004a004500430054003d007b00390064006500610038003600320063002d0035006300640064002d0034006500370030002d0061006300630031002d006600330032006200330034003400640034003700390035007d00000061000100000010000000040000007fff0400
+      dp: 04 01 2a 00 01 00 00 00 00 08 00 00 00 00 00 00 00 20 03 00 00 00 00 00 14 20 6d 86 35 37 7d 41 93 81 07 21 dd 3a d5 ef 02 02 / 04 04 46 00 5c 00 45 00 46 00 49 00 5c 00 4d 00 69 00 63 00 72 00 6f 00 73 00 6f 00 66 00 74 00 5c 00 42 00 6f 00 6f 00 74 00 5c 00 62 00 6f 00 6f 00 74 00 6d 00 67 00 66 00 77 00 2e 00 65 00 66 00 69 00 00 00 / 7f ff 04 00
+    data: 57 49 4e 44 4f 57 53 00 01 00 00 00 88 00 00 00 78 00 00 00 42 00 43 00 44 00 4f 00 42 00 4a 00 45 00 43 00 54 00 3d 00 7b 00 39 00 64 00 65 00 61 00 38 00 36 00 32 00 63 00 2d 00 35 00 63 00 64 00 64 00 2d 00 34 00 65 00 37 00 30 00 2d 00 61 00 63 00 63 00 31 00 2d 00 66 00 33 00 32 00 62 00 33 00 34 00 34 00 64 00 34 00 37 00 39 00 35 00 7d 00 00 00 61 00 01 00 00 00 10 00 00 00 04 00 00 00 7f ff 04 00
+Boot0002* ubuntu	HD(1,GPT,866d2014-3735-417d-9381-0721dd3ad5ef,0x800,0x32000)/File(\EFI\ubuntu\shimx64.efi) File(.䍒)
+      dp: 04 01 2a 00 01 00 00 00 00 08 00 00 00 00 00 00 00 20 03 00 00 00 00 00 14 20 6d 86 35 37 7d 41 93 81 07 21 dd 3a d5 ef 02 02 / 04 04 34 00 5c 00 45 00 46 00 49 00 5c 00 75 00 62 00 75 00 6e 00 74 00 75 00 5c 00 73 00 68 00 69 00 6d 00 78 00 36 00 34 00 2e 00 65 00 66 00 69 00 00 00 / 7f ff 04 00
+    data: 52 43
+Boot2001* EFI USB Device	RC
+      dp: 7f ff 04 00
+    data: 52 43
+Boot3002* Internal Hard Disk or Solid State Disk	RC
+      dp: 7f ff 04 00
+    data: 52 43
+
+============================================================
+7. INITRAMFS
+============================================================
+
+--- Initramfs del kernel actual ---
+-rw-r--r-- 1 root root 79M ago  4 18:01 /boot/initrd.img-6.8.0-137-generic
+
+Módulos relevantes presentes en initramfs:
+usr/lib/firmware/3com
+usr/lib/firmware/3com/typhoon.bin.zst
+usr/lib/firmware/acenic
+usr/lib/firmware/acenic/tg1.bin.zst
+usr/lib/firmware/acenic/tg2.bin.zst
+usr/lib/firmware/adaptec
+usr/lib/firmware/adaptec/starfire_rx.bin.zst
+usr/lib/firmware/adaptec/starfire_tx.bin.zst
+usr/lib/firmware/advansys
+usr/lib/firmware/advansys/3550.bin.zst
+usr/lib/firmware/advansys/38C0800.bin.zst
+usr/lib/firmware/advansys/38C1600.bin.zst
+usr/lib/firmware/advansys/mcode.bin.zst
+usr/lib/firmware/bnx2
+usr/lib/firmware/bnx2/bnx2-mips-06-6.2.3.fw.zst
+usr/lib/firmware/bnx2/bnx2-mips-09-6.2.1b.fw.zst
+usr/lib/firmware/bnx2/bnx2-rv2p-06-6.0.15.fw.zst
+usr/lib/firmware/bnx2/bnx2-rv2p-09-6.0.17.fw.zst
+usr/lib/firmware/bnx2/bnx2-rv2p-09ax-6.0.17.fw.zst
+usr/lib/firmware/bnx2x
+usr/lib/firmware/bnx2x/bnx2x-e1-7.13.15.0.fw.zst
+usr/lib/firmware/bnx2x/bnx2x-e1-7.13.21.0.fw.zst
+usr/lib/firmware/bnx2x/bnx2x-e1h-7.13.15.0.fw.zst
+usr/lib/firmware/bnx2x/bnx2x-e1h-7.13.21.0.fw.zst
+usr/lib/firmware/bnx2x/bnx2x-e2-7.13.15.0.fw.zst
+usr/lib/firmware/bnx2x/bnx2x-e2-7.13.21.0.fw.zst
+usr/lib/firmware/cbfw-3.2.5.1.bin.zst
+usr/lib/firmware/cis
+usr/lib/firmware/cis/3CCFEM556.cis.zst
+usr/lib/firmware/cis/3CXEM556.cis.zst
+usr/lib/firmware/cis/COMpad2.cis.zst
+usr/lib/firmware/cis/COMpad4.cis.zst
+usr/lib/firmware/cis/DP83903.cis.zst
+usr/lib/firmware/cis/LA-PCM.cis.zst
+usr/lib/firmware/cis/MT5634ZLX.cis.zst
+usr/lib/firmware/cis/NE2K.cis.zst
+usr/lib/firmware/cis/PCMLM28.cis.zst
+usr/lib/firmware/cis/PE-200.cis.zst
+usr/lib/firmware/cis/PE520.cis.zst
+usr/lib/firmware/cis/RS-COM-2P.cis.zst
+usr/lib/firmware/cis/SW_555_SER.cis.zst
+usr/lib/firmware/cis/SW_7xx_SER.cis.zst
+usr/lib/firmware/cis/SW_8xx_SER.cis.zst
+usr/lib/firmware/cis/tamarack.cis.zst
+usr/lib/firmware/ct2fw-3.2.5.1.bin.zst
+usr/lib/firmware/ctfw-3.2.5.1.bin.zst
+usr/lib/firmware/cxgb3
+usr/lib/firmware/cxgb3/ael2005_opt_edc.bin.zst
+usr/lib/firmware/cxgb3/ael2005_twx_edc.bin.zst
+usr/lib/firmware/cxgb3/ael2020_twx_edc.bin.zst
+usr/lib/firmware/cxgb3/t3b_psram-1.1.0.bin.zst
+usr/lib/firmware/cxgb3/t3c_psram-1.1.0.bin.zst
+usr/lib/firmware/cxgb3/t3fw-7.12.0.bin.zst
+usr/lib/firmware/cxgb4
+usr/lib/firmware/cxgb4/t4fw-1.27.5.0.bin.zst
+usr/lib/firmware/cxgb4/t4fw.bin.zst
+usr/lib/firmware/cxgb4/t5fw-1.27.5.0.bin.zst
+usr/lib/firmware/cxgb4/t5fw.bin.zst
+usr/lib/firmware/cxgb4/t6fw-1.27.5.0.bin.zst
+usr/lib/firmware/cxgb4/t6fw.bin.zst
+usr/lib/firmware/e100
+usr/lib/firmware/e100/d101m_ucode.bin.zst
+usr/lib/firmware/e100/d101s_ucode.bin.zst
+usr/lib/firmware/e100/d102e_ucode.bin.zst
+usr/lib/firmware/ene-ub6250
+usr/lib/firmware/ene-ub6250/ms_init.bin.zst
+usr/lib/firmware/ene-ub6250/ms_rdwr.bin.zst
+usr/lib/firmware/ene-ub6250/msp_rdwr.bin.zst
+usr/lib/firmware/ene-ub6250/sd_init1.bin.zst
+usr/lib/firmware/ene-ub6250/sd_init2.bin.zst
+usr/lib/firmware/ene-ub6250/sd_rdwr.bin.zst
+usr/lib/firmware/intel
+usr/lib/firmware/intel/ice
+usr/lib/firmware/intel/ice/ddp
+usr/lib/firmware/intel/ice/ddp/ice-1.3.43.0.pkg.zst
+usr/lib/firmware/intel/ice/ddp/ice.pkg.zst
+usr/lib/firmware/isci
+usr/lib/firmware/isci/isci_firmware.bin.zst
+usr/lib/firmware/kaweth
+usr/lib/firmware/kaweth/new_code.bin.zst
+usr/lib/firmware/kaweth/new_code_fix.bin.zst
+usr/lib/firmware/kaweth/trigger_code.bin.zst
+usr/lib/firmware/kaweth/trigger_code_fix.bin.zst
+usr/lib/firmware/liquidio
+usr/lib/firmware/liquidio/lio_210nv_nic.bin.zst
+usr/lib/firmware/liquidio/lio_210sv_nic.bin.zst
+usr/lib/firmware/liquidio/lio_23xx_nic.bin.zst
+usr/lib/firmware/liquidio/lio_410nv_nic.bin.zst
+usr/lib/firmware/mellanox
+usr/lib/firmware/mellanox/lc_ini_bundle_2010_1006.bin.zst
+usr/lib/firmware/mellanox/mlxsw_spectrum-13.2010.1006.mfa2.zst
+usr/lib/firmware/mellanox/mlxsw_spectrum2-29.2010.1006.mfa2.zst
+usr/lib/firmware/mellanox/mlxsw_spectrum3-30.2010.1006.mfa2.zst
+usr/lib/firmware/microchip
+usr/lib/firmware/microchip/mscc_vsc8574_revb_int8051_29e8.bin.zst
+usr/lib/firmware/microchip/mscc_vsc8584_revb_int8051_fb48.bin.zst
+usr/lib/firmware/myri10ge_eth_z8e.dat.zst
+usr/lib/firmware/myri10ge_ethp_z8e.dat.zst
+usr/lib/firmware/myri10ge_rss_eth_z8e.dat.zst
+usr/lib/firmware/myri10ge_rss_ethp_z8e.dat.zst
+usr/lib/firmware/netronome
+usr/lib/firmware/netronome/nic
+usr/lib/firmware/netronome/nic/nic_AMDA0058-0011_2x40.nffw.zst
+usr/lib/firmware/netronome/nic/nic_AMDA0058-0012_2x40.nffw.zst
+usr/lib/firmware/netronome/nic/nic_AMDA0081-0001_1x40.nffw.zst
+usr/lib/firmware/netronome/nic/nic_AMDA0081-0001_4x10.nffw.zst
+usr/lib/firmware/netronome/nic/nic_AMDA0096-0001_2x10.nffw.zst
+usr/lib/firmware/netronome/nic/nic_AMDA0097-0001_2x40.nffw.zst
+usr/lib/firmware/netronome/nic/nic_AMDA0097-0001_4x10_1x40.nffw.zst
+usr/lib/firmware/netronome/nic/nic_AMDA0097-0001_8x10.nffw.zst
+usr/lib/firmware/netronome/nic/nic_AMDA0099-0001_1x10_1x25.nffw.zst
+usr/lib/firmware/netronome/nic/nic_AMDA0099-0001_2x10.nffw.zst
+usr/lib/firmware/netronome/nic/nic_AMDA0099-0001_2x25.nffw.zst
+usr/lib/firmware/netronome/nic_AMDA0058-0011_2x40.nffw.zst
+usr/lib/firmware/netronome/nic_AMDA0058-0012_2x40.nffw.zst
+usr/lib/firmware/netronome/nic_AMDA0081-0001_1x40.nffw.zst
+usr/lib/firmware/netronome/nic_AMDA0081-0001_4x10.nffw.zst
+usr/lib/firmware/netronome/nic_AMDA0096-0001_2x10.nffw.zst
+usr/lib/firmware/netronome/nic_AMDA0097-0001_2x40.nffw.zst
+usr/lib/firmware/netronome/nic_AMDA0097-0001_4x10_1x40.nffw.zst
+usr/lib/firmware/netronome/nic_AMDA0097-0001_8x10.nffw.zst
+usr/lib/firmware/netronome/nic_AMDA0099-0001_1x10_1x25.nffw.zst
+usr/lib/firmware/netronome/nic_AMDA0099-0001_2x10.nffw.zst
+usr/lib/firmware/netronome/nic_AMDA0099-0001_2x25.nffw.zst
+usr/lib/firmware/ositech
+usr/lib/firmware/ositech/Xilinx7OD.bin.zst
+usr/lib/firmware/phanfw.bin.zst
+usr/lib/firmware/qed
+usr/lib/firmware/qed/qed_init_values_zipped-8.59.1.0.bin.zst
+usr/lib/firmware/ql2100_fw.bin.zst
+usr/lib/firmware/ql2200_fw.bin.zst
+usr/lib/firmware/ql2300_fw.bin.zst
+usr/lib/firmware/ql2322_fw.bin.zst
+usr/lib/firmware/ql2400_fw.bin.zst
+usr/lib/firmware/ql2500_fw.bin.zst
+usr/lib/firmware/qlogic
+usr/lib/firmware/qlogic/1040.bin.zst
+usr/lib/firmware/qlogic/12160.bin.zst
+usr/lib/firmware/qlogic/1280.bin.zst
+usr/lib/firmware/rp2.fw.zst
+usr/lib/firmware/rtl_nic
+usr/lib/firmware/rtl_nic/rtl8105e-1.fw.zst
+usr/lib/firmware/rtl_nic/rtl8106e-1.fw.zst
+usr/lib/firmware/rtl_nic/rtl8106e-2.fw.zst
+usr/lib/firmware/rtl_nic/rtl8107e-2.fw.zst
+usr/lib/firmware/rtl_nic/rtl8125a-3.fw.zst
+usr/lib/firmware/rtl_nic/rtl8125b-2.fw.zst
+usr/lib/firmware/rtl_nic/rtl8153a-2.fw.zst
+usr/lib/firmware/rtl_nic/rtl8153a-3.fw.zst
+usr/lib/firmware/rtl_nic/rtl8153a-4.fw.zst
+
+============================================================
+8. FIRMWARE
+============================================================
+
+--- Paquetes firmware ---
+ii  amd64-microcode                                3.20251202.1ubuntu0.24.04.1                      amd64        Platform firmware and microcode for AMD CPUs and SoCs
+ii  firmware-sof-signed                            2023.12.1-1ubuntu1.11                            all          Intel SOF firmware - signed
+ii  intel-microcode                                3.20260210.0ubuntu0.24.04.1                      amd64        Processor microcode firmware for Intel CPUs
+ii  iucode-tool                                    2.3.1-3build1                                    amd64        Intel processor microcode tool
+ii  linux-firmware                                 20240318.git3b128b60-0ubuntu2.27                 amd64        Firmware for Linux kernel drivers
+
+--- Microcode ---
+
+============================================================
+9. COMPILACIÓN
+============================================================
+
+--- Compilador ---
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+--- Clang ---
+[NO DISPONIBLE] clang
+
+--- Make ---
+GNU Make 4.3
+Este programa fue construido para x86_64-pc-linux-gnu
+Copyright (C) 1988-2020 Free Software Foundation, Inc.
+Licencia GPLv3+: GNU GPL versión 3 o posterior <http://gnu.org/licenses/gpl.html>
+Este es software libre: cualquiera es libre para redistribuirlo y modificarlo.
+No existe GARANTÍA ALGUNA, hasta los límites permitidos por las leyes aplicables.
+
+--- Binutils ---
+GNU ld (GNU Binutils for Ubuntu) 2.42
+Copyright (C) 2024 Free Software Foundation, Inc.
+Este programa es software libre; se puede redistribuir bajo los términos de
+la Licencia Pública General de GNU versión 3 o (a su elección) una versión
+posterior.
+Este programa no tiene absolutamente ninguna garantía.
+
+--- Bison ---
+[NO DISPONIBLE] bison
+
+--- Flex ---
+[NO DISPONIBLE] flex
+
+--- Perl ---
+
+This is perl 5, version 38, subversion 2 (v5.38.2) built for x86_64-linux-gnu-thread-multi
+(with 54 registered patches, see perl -V for more detail)
+
+Copyright 1987-2023, Larry Wall
+
+Perl may be copied only under the terms of either the Artistic License or the
+GNU General Public License, which may be found in the Perl 5 source kit.
+
+Complete documentation for Perl, including FAQ lists, should be found on
+this system using "man perl" or "perldoc perl".  If you have access to the
+Internet, point your browser at https://www.perl.org/, the Perl Home Page.
+
+
+--- Python ---
+Python 3.12.2
+
+--- pkg-config ---
+1.8.1
+
+--- Herramientas Debian ---
+dpkg-buildpackage    OK: /usr/bin/dpkg-buildpackage
+fakeroot             OK: /usr/bin/fakeroot
+make-kpkg            NO
+ccache               NO
+
+============================================================
+10. RECURSOS PARA COMPILACIÓN
+============================================================
+
+--- Memoria ---
+               total       usado       libre  compartido   búf/caché  disponible
+Mem:            14Gi       4,1Gi       1,6Gi       150Mi       9,3Gi        10Gi
+Inter:            0B          0B          0B
+
+--- CPU disponibles ---
+nproc: 4
+
+--- Espacio libre ---
+S.ficheros     Tipo Tamaño Usados  Disp Uso% Montado en
+/dev/sda5      ext4    92G    80G  7,4G  92% /
+S.ficheros     Tipo Tamaño Usados  Disp Uso% Montado en
+/dev/sda5      ext4    92G    80G  7,4G  92% /
+
+--- Swap ---
+
+============================================================
+11. ERRORES DEL KERNEL ACTUAL
+============================================================
+
+--- Errores y warnings del boot ---
+ago 04 22:02:13 yarara kernel: ACPI BIOS Error (bug): Could not resolve symbol [\_SB.WLBU._STA.WLVD], AE_NOT_FOUND (20230628/psargs-332)
+ago 04 22:02:13 yarara kernel: 
+ago 04 22:02:13 yarara kernel: 
+                               Initialized Local Variables for Method [_STA]:
+ago 04 22:02:13 yarara kernel:   Local0: (____ptrval____) <Obj>           Integer 0000000000000000
+ago 04 22:02:13 yarara kernel: 
+ago 04 22:02:13 yarara kernel: No Arguments are initialized for method [_STA]
+ago 04 22:02:13 yarara kernel: 
+ago 04 22:02:13 yarara kernel: ACPI Error: Aborting method \_SB.WLBU._STA due to previous error (AE_NOT_FOUND) (20230628/psparse-529)
+ago 04 22:02:13 yarara kernel: ACPI BIOS Error (bug): Could not resolve symbol [\_SB.WLBU._STA.WLVD], AE_NOT_FOUND (20230628/psargs-332)
+ago 04 22:02:13 yarara kernel: 
+ago 04 22:02:13 yarara kernel: 
+                               Initialized Local Variables for Method [_STA]:
+ago 04 22:02:13 yarara kernel:   Local0: (____ptrval____) <Obj>           Integer 0000000000000000
+ago 04 22:02:13 yarara kernel: 
+ago 04 22:02:13 yarara kernel: No Arguments are initialized for method [_STA]
+ago 04 22:02:13 yarara kernel: 
+ago 04 22:02:13 yarara kernel: ACPI Error: Aborting method \_SB.WLBU._STA due to previous error (AE_NOT_FOUND) (20230628/psparse-529)
+ago 04 22:02:13 yarara kernel: ACPI BIOS Error (bug): Could not resolve symbol [\_SB.WLBU._STA.WLVD], AE_NOT_FOUND (20230628/psargs-332)
+ago 04 22:02:13 yarara kernel: 
+ago 04 22:02:13 yarara kernel: 
+                               Initialized Local Variables for Method [_STA]:
+ago 04 22:02:13 yarara kernel:   Local0: 00000000114e7ab1 <Obj>           Integer 0000000000000000
+ago 04 22:02:13 yarara kernel: 
+ago 04 22:02:13 yarara kernel: No Arguments are initialized for method [_STA]
+ago 04 22:02:13 yarara kernel: 
+ago 04 22:02:13 yarara kernel: ACPI Error: Aborting method \_SB.WLBU._STA due to previous error (AE_NOT_FOUND) (20230628/psparse-529)
+ago 04 22:02:13 yarara kernel: tpm_crb MSFT0101:00: can't request region for resource [mem 0x9fb76000-0x9fb79fff]
+ago 04 22:02:13 yarara kernel: tpm_crb: probe of MSFT0101:00 failed with error -16
+ago 04 22:02:13 yarara kernel: device-mapper: core: CONFIG_IMA_DISABLE_HTABLE is disabled. Duplicate IMA measurements will not be recorded in the IMA log.
+ago 04 22:02:13 yarara kernel: amd_pstate: the _CPC object is not present in SBIOS or ACPI disabled
+ago 04 22:02:13 yarara kernel: r8169 0000:03:00.0: can't disable ASPM; OS doesn't have ASPM control
+ago 04 22:02:15 yarara kernel: ACPI Warning: SystemIO range 0x0000000000000B00-0x0000000000000B08 conflicts with OpRegion 0x0000000000000B00-0x0000000000000B0F (\_SB.PCI0.SMBS.SMB0) (20230628/utaddress-204)
+ago 04 22:02:15 yarara kernel: ACPI BIOS Error (bug): Attempt to CreateField of length zero (20230628/dsopcode-133)
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: 
+                               Initialized Local Variables for Method [WQBD]:
+ago 04 22:02:15 yarara kernel:   Local0: 00000000e1e7ae82 <Obj>           Integer 0000000000000011
+ago 04 22:02:15 yarara kernel:   Local1: 00000000ba8a024b <Obj>           Buffer(512) 0D 00 53 79 73 74 65 6D
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: Initialized Arguments for Method [WQBD]:  (1 arguments defined for method invocation)
+ago 04 22:02:15 yarara kernel:   Arg0:   000000007be2eaa9 <Obj>           Integer 0000000000000010
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: ACPI Error: Aborting method \_SB.WMID.WQBD due to previous error (AE_AML_OPERAND_VALUE) (20230628/psparse-529)
+ago 04 22:02:15 yarara kernel: ACPI BIOS Error (bug): Attempt to CreateField of length zero (20230628/dsopcode-133)
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: 
+                               Initialized Local Variables for Method [WQBD]:
+ago 04 22:02:15 yarara kernel:   Local0: 00000000fe9c5e7d <Obj>           Integer 0000000000000011
+ago 04 22:02:15 yarara kernel:   Local1: 000000005892dc65 <Obj>           Buffer(512) 0D 00 53 79 73 74 65 6D
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: Initialized Arguments for Method [WQBD]:  (1 arguments defined for method invocation)
+ago 04 22:02:15 yarara kernel:   Arg0:   000000003579d792 <Obj>           Integer 0000000000000010
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: ACPI Error: Aborting method \_SB.WMID.WQBD due to previous error (AE_AML_OPERAND_VALUE) (20230628/psparse-529)
+ago 04 22:02:15 yarara kernel: ACPI BIOS Error (bug): Attempt to CreateField of length zero (20230628/dsopcode-133)
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: 
+                               Initialized Local Variables for Method [WQBC]:
+ago 04 22:02:15 yarara kernel:   Local0: 0000000097e5eae9 <Obj>           Integer 0000000000000043
+ago 04 22:02:15 yarara kernel:   Local1: 00000000fe9c5e7d <Obj>           Buffer(128) 0E 00 4C 65 67 61 63 79
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: Initialized Arguments for Method [WQBC]:  (1 arguments defined for method invocation)
+ago 04 22:02:15 yarara kernel:   Arg0:   00000000e7ac405b <Obj>           Integer 0000000000000012
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: ACPI Error: Aborting method \_SB.WMID.WQBC due to previous error (AE_AML_OPERAND_VALUE) (20230628/psparse-529)
+ago 04 22:02:15 yarara kernel: ACPI BIOS Error (bug): Attempt to CreateField of length zero (20230628/dsopcode-133)
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: 
+                               Initialized Local Variables for Method [WQBC]:
+ago 04 22:02:15 yarara kernel:   Local0: 00000000dc78b211 <Obj>           Integer 0000000000000043
+ago 04 22:02:15 yarara kernel:   Local1: 000000000d360810 <Obj>           Buffer(128) 0E 00 4C 65 67 61 63 79
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: Initialized Arguments for Method [WQBC]:  (1 arguments defined for method invocation)
+ago 04 22:02:15 yarara kernel:   Arg0:   000000007e80e16f <Obj>           Integer 0000000000000012
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: ACPI Error: Aborting method \_SB.WMID.WQBC due to previous error (AE_AML_OPERAND_VALUE) (20230628/psparse-529)
+ago 04 22:02:15 yarara kernel: ACPI BIOS Error (bug): Attempt to CreateField of length zero (20230628/dsopcode-133)
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: 
+                               Initialized Local Variables for Method [WQBE]:
+ago 04 22:02:15 yarara kernel:   Local0: 00000000aade9436 <Obj>           Integer 0000000000000000
+ago 04 22:02:15 yarara kernel:   Local1: 00000000a775c149 <Obj>           Buffer(512) 0F 55 45 46 49 20 42 6F
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: Initialized Arguments for Method [WQBE]:  (1 arguments defined for method invocation)
+ago 04 22:02:15 yarara kernel:   Arg0:   000000007e80e16f <Obj>           Integer 0000000000000000
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: ACPI Error: Aborting method \_SB.WMID.WQBE due to previous error (AE_AML_OPERAND_VALUE) (20230628/psparse-529)
+ago 04 22:02:15 yarara kernel: ACPI BIOS Error (bug): Attempt to CreateField of length zero (20230628/dsopcode-133)
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: 
+                               Initialized Local Variables for Method [WQBE]:
+ago 04 22:02:15 yarara kernel:   Local0: 000000003fd0b6c7 <Obj>           Integer 0000000000000000
+ago 04 22:02:15 yarara kernel:   Local1: 00000000fa39ff1e <Obj>           Buffer(512) 0F 55 45 46 49 20 42 6F
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: Initialized Arguments for Method [WQBE]:  (1 arguments defined for method invocation)
+ago 04 22:02:15 yarara kernel:   Arg0:   00000000eeb5b613 <Obj>           Integer 0000000000000000
+ago 04 22:02:15 yarara kernel: 
+ago 04 22:02:15 yarara kernel: ACPI Error: Aborting method \_SB.WMID.WQBE due to previous error (AE_AML_OPERAND_VALUE) (20230628/psparse-529)
+ago 04 22:02:15 yarara kernel: hp_bioscfg: Returned error 0x3, "Invalid command value/Feature not supported"
+ago 04 22:02:25 yarara kernel: spl: loading out-of-tree module taints kernel.
+ago 04 22:02:25 yarara kernel: zfs: module license 'CDDL' taints kernel.
+ago 04 22:02:25 yarara kernel: Disabling lock debugging due to kernel taint
+ago 04 22:02:25 yarara kernel: zfs: module license taints kernel.
+ago 04 22:06:29 yarara kernel: VBoxNetFlt: Successfully started.
+ago 04 22:06:29 yarara kernel: VBoxNetAdp: Successfully started.
+ago 04 22:06:30 yarara kernel: kauditd_printk_skb: 112 callbacks suppressed
+
+============================================================
+12. RESUMEN
+============================================================
+Host                 : yarara
+Distribución         : Linux Mint 22.2
+Kernel actual        : 6.8.0-137-generic
+Arquitectura         : x86_64
+Boot                 : UEFI
+Secure Boot          : SecureBoot disabled
+
+Auditoría finalizada.
