@@ -1,0 +1,5 @@
+.kernels/
+.cfgs/
+*.deb
+*.changes
+*.buildinfo
