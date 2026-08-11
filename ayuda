@@ -1,36 +1,52 @@
-
 #!/bin/bash
 clear
-# Colores para una salida más elegante
-RED="\e[31m"
-GREEN="\e[32m"
-CYAN="\e[36m"
-YELLOW="\e[33m"
-NC="\e[0m"
+
 # Directorio inicial. Puede sobrescribirse con BASH_SCRIPTS_HOME.
 # La navegación con "*" puede salir deliberadamente de este árbol.
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 BASE_DIR="${BASH_SCRIPTS_HOME:-$SCRIPT_DIR}"
+
+# Colores compartidos.
+# Se espera que colores.sh exista dentro de .lib/ junto a este script.
+# shellcheck source=.lib/colores.sh
+source "$SCRIPT_DIR/.lib/colores.sh" || {
+    printf 'Error: no se pudo cargar %s\n' "$SCRIPT_DIR/.lib/colores.sh" >&2
+    exit 1
+}
+
+# Acorta únicamente la ruta mostrada en pantalla.
+# Internamente BASE_DIR conserva siempre la ruta real.
+ruta_mostrada() {
+    local ruta="$1"
+
+    if [[ "$ruta" == "$HOME" ]]; then
+        printf '~'
+    elif [[ "$ruta" == "$HOME/"* ]]; then
+        printf '~/%s' "${ruta#"$HOME/"}"
+    else
+        printf '%s' "$ruta"
+    fi
+}
 
 # Función para mostrar el menú
 mostrar_menu() {
     clear
     #echo "             "
     echo -e "${CYAN}🔰  ╭───────────────────────────────────────────────────────╮"
-    echo -e "${CYAN}    │        🖳 ${NC} COMANDOS INTERACTIVOS RAPIDOS ${CYAN}              │"  
+    echo -e "${CYAN}    │        🖳 ${NC} COMANDOS INTERACTIVOS RAPIDOS ${CYAN}              │"
     echo -e "${CYAN}    ╰──╥────────────────────────────────────────────────────╯"
-    echo -e "${CYAN}       ║ ${GREEN}⛶ Directorio:${NC}$BASE_DIR"
-    echo -e "${CYAN}       ╙───────────────────────────────────────────────╾"                        
-    
+    echo -e "${CYAN}       ║ ${GREEN}⛶ Directorio:${NC}$(ruta_mostrada "$BASE_DIR")"
+    echo -e "${CYAN}       ╙───────────────────────────────────────────────╾"
+
     # Listar scripts en el directorio principal
     echo -e "    ${NC}📝 Scripts disponibles:"
     mapfile -d '' -t SCRIPTS < <(
         find "$BASE_DIR" -maxdepth 1 -type f -name "*.sh" -print0 | sort -z
     )
     for i in "${!SCRIPTS[@]}"; do
-        echo -e "         ${YELLOW}[$((i+1))]${RED} $(basename "${SCRIPTS[i]}")"
+        echo -e "         ${YELLOW}[$((i+1))]${GREEN} $(basename "${SCRIPTS[i]}")${NC}"
     done
-    echo -e "         ${YELLOW}[w]${CYAN} Informacion de Clima⛅"   
+    echo -e "         ${YELLOW}[**]${CYAN} Informacion de Clima⛅${NC}"
 
     # Listar subdirectorios
     #echo ""
@@ -40,32 +56,57 @@ mostrar_menu() {
             -not -name ".*" -print0 | sort -z
     )
     for i in "${!DIRS[@]}"; do
-        echo -e "         ${YELLOW}[d$((i+1))]${GREEN}$(basename "${DIRS[i]}")/${NC}"
+        if [[ -f "${DIRS[i]}/MAIN.sh" ]]; then
+            # Un directorio con MAIN.sh se comporta como una aplicación ejecutable.
+            echo -e "         ${YELLOW}[-$((i+1))]${GREEN}$(basename "${DIRS[i]}")/${NC}"
+        else
+            echo -e "         ${YELLOW}[-$((i+1))]${RED}$(basename "${DIRS[i]}")/${NC}"
+        fi
     done
     #echo ""
-    echo -e "         ${YELLOW}[*] ${RED}⮹${NC} volver"   
-    echo -e "         ${YELLOW}[0] ${RED}⮿${NC} Salir"   
+    echo -e "         ${YELLOW}[*] ${RED}⮹${NC} volver"
+    echo -e "         ${YELLOW}[0] ${RED}⮿${NC} Salir"
     echo -e "${CYAN}    ╼─┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈─╾${YELLOW}"
 }
 
 # Función para ejecutar un script
+# Recibe la ruta completa para poder reutilizarla con MAIN.sh.
 ejecutar_script() {
-    local script="${SCRIPTS[$1]}"
+    local script="$1"
+    local directorio_ejecucion="${2:-}"
+
     echo "▶  Ejecutando: $(basename "$script")..."
-    bash "$script"
-    local estado=$?
+
+    local estado
+    if [[ -n "$directorio_ejecucion" ]]; then
+        (
+            cd "$directorio_ejecucion" || exit 1
+            bash "./$(basename "$script")"
+        )
+        estado=$?
+    else
+        bash "$script"
+        estado=$?
+    fi
+
     (( estado == 0 )) || echo -e "${RED}⚠ El script terminó con código $estado.${NC}"
     read -r -p "⏳ (continuar)"
 }
 
-# Función para explorar un directorio
-explorar_directorio() {
+# Función para procesar un directorio.
+# Si contiene MAIN.sh, lo ejecuta sin modificar BASE_DIR.
+# En caso contrario, navega normalmente al directorio.
+procesar_directorio() {
     local dir="${DIRS[$1]}"
+
+    if [[ -f "$dir/MAIN.sh" ]]; then
+        ejecutar_script "$dir/MAIN.sh" "$dir"
+        return
+    fi
+
     cd "$dir" || return
     BASE_DIR="$dir"
 }
-
-
 
 # Loop del menú
 while true; do
@@ -77,7 +118,6 @@ while true; do
     #echo "$(env | grep '^PS1=' | sed 's/^PS1=//')"
     #PS1V=$(env | grep '^PS1=' | sed 's/^PS1=//')
     read -r -p "   🗿${USER:-usuario}⭕ " opcion
-
 
     # Salir
     if [[ "$opcion" == "0" ]]; then
@@ -94,36 +134,56 @@ while true; do
         echo -e "   ⚯ ${NC} Que tenga un buen "
         sleep 0.1
         clear
-        echo -e "   ✳️ ${YELLOW} Que tenga un buen dia!!!"        
+        echo -e "   ✳️ ${YELLOW} Que tenga un buen dia!!!"
         exit 0
     fi
 #----------
-  # Ejecutar un script
-if [[ "$opcion" =~ ^[0-9]+$ ]] && (( opcion >= 1 && opcion <= ${#SCRIPTS[@]} )); then
-    ejecutar_script $((opcion-1))
-    
-# Explorar un directorio
-elif [[ "$opcion" =~ ^d[0-9]+$ ]]; then
-    num=${opcion:1} # Extrae el número después de "d"
-    if (( num >= 1 && num <= ${#DIRS[@]} )); then
-        explorar_directorio $((num-1))
+# Ejecutar un script
+if [[ "$opcion" =~ ^[1-9][0-9]*$ ]]; then
+    num=$((10#$opcion))
+    if (( num <= ${#SCRIPTS[@]} )); then
+        ejecutar_script "${SCRIPTS[$((num-1))]}"
+    else
+        clear
+        echo -e " ${GREEN}  ▶   ${NC}$opcion\n"
+        bash -c "$opcion"
+        estado=$?
+        (( estado == 0 )) || echo -e "${RED}⚠ Código de salida: $estado${NC}"
+        read -r -p "✳️ (continuar)"
     fi
 
+# Explorar o ejecutar un directorio
+elif [[ "$opcion" =~ ^-[1-9][0-9]*$ ]]; then
+    num="${opcion#-}"
+    num=$((10#$num))
+    if (( num <= ${#DIRS[@]} )); then
+        procesar_directorio $((num-1))
+    else
+        clear
+        echo -e " ${GREEN}  ▶   ${NC}$opcion\n"
+        bash -c "$opcion"
+        estado=$?
+        (( estado == 0 )) || echo -e "${RED}⚠ Código de salida: $estado${NC}"
+        read -r -p "✳️ (continuar)"
+    fi
 
 # Subir un nivel en el directorio
 elif [[ "$opcion" == "*" ]]; then
     cd "$BASE_DIR/.." || continue
     BASE_DIR=$(pwd -P) # Navegación libre intencional (feature oculta).
-# Manejar entradas no válidas o desconocidas
-elif [[ "$opcion" == "w" ]]; then
+
+# Información de clima
+elif [[ "$opcion" == "**" ]]; then
     clear
     curl http://wttr.in/U9211
     read -r -p "✳️ (continuar)"
+
+# Manejar entradas no válidas o desconocidas
 else
     # echo -e "${RED}⚠ Error: Opción no válida: '$opcion'${NC}"
     # read -p "✳️ (Presiona Enter para continuar)"
-    clear 
-    echo -e " ${GREEN}  ▶   ${NC}$opcion\n" 
+    clear
+    echo -e " ${GREEN}  ▶   ${NC}$opcion\n"
     # Modo min-shell deliberado: admite argumentos, pipes y redirecciones.
     bash -c "$opcion"
     estado=$?

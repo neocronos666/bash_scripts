@@ -1,1 +1,6 @@
 scrapping/bajado/
+tweaks/linux-kernel/.kernels/
+tweaks/linux-kernel/.cfgs/
+*.deb
+*.changes
+*.buildinfo
