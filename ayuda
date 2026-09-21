@@ -14,6 +14,20 @@ source "$SCRIPT_DIR/.lib/colores.sh" || {
     exit 1
 }
 
+# Ayuda directa: "ayuda curl" consulta TLDR sin abrir el menú.
+# TLDR se comprueba e instala únicamente cuando se solicita esta función.
+# shellcheck source=.lib/comunes.sh
+source "$SCRIPT_DIR/.lib/comunes.sh" || {
+    printf 'Error: no se pudo cargar %s\n' "$SCRIPT_DIR/.lib/comunes.sh" >&2
+    exit 1
+}
+
+if (( $# > 0 )); then
+    asegurar_dependencia "tldr" "tealdeer"         "TLDR muestra ejemplos breves y prácticos de uso de comandos."
+    tldr "$@"
+    exit $?
+fi
+
 # Acorta únicamente la ruta mostrada en pantalla.
 # Internamente BASE_DIR conserva siempre la ruta real.
 ruta_mostrada() {
@@ -175,7 +189,9 @@ elif [[ "$opcion" == "*" ]]; then
 # Información de clima
 elif [[ "$opcion" == "**" ]]; then
     clear
-    curl http://wttr.in/U9211
+    if asegurar_dependencia "curl" "curl" "Curl se utiliza para consultar el servicio de clima."; then
+        curl http://wttr.in/U9211
+    fi
     read -r -p "✳️ (continuar)"
 
 # Manejar entradas no válidas o desconocidas
