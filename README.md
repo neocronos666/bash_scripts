@@ -85,9 +85,18 @@ El launcher requiere Bash y utilidades GNU habituales (`find`, `sort` y
 `mapfile`). Los módulos de administración están orientados a Linux; los
 instaladores actuales apuntan principalmente a Debian/Ubuntu.
 
-Cada herramienta adicional se comprueba en el script que la necesita cuando
-es posible. Entre las dependencias opcionales están `curl`, `wget`, `pandoc`,
-`yt-dlp`, `ffmpeg`, `git`, `systemd`, Docker y las herramientas de Proxmox.
+Cada herramienta adicional se comprueba en el punto en que se necesita. Las dependencias
+opcionales no se instalan durante el arranque: cuando una función las requiere, el script
+informa para qué sirven y pide autorización antes de instalarlas.
+
+`ayuda` sin argumentos mantiene su menú habitual. Con argumentos, por ejemplo
+`ayuda curl`, consulta TLDR directamente. TLDR se comprueba e instala solamente en
+ese primer uso.
+
+Navi se instala y configura con `setup/cfg-navi.sh`. La configuración es idempotente:
+si Navi ya está instalado no se reinstala y el bloque administrado de `~/.bashrc` no
+se duplica. Los cheats propios del proyecto viven en `.vendor/navi/cheats/`, fuera del
+menú de `ayuda`.
 
 Los scripts de `seguridad/`, `setup/` y `tweaks/` pueden utilizar `sudo` o
 realizar cambios importantes. Lea su contenido y la confirmación mostrada
