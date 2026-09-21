@@ -87,6 +87,11 @@ source <(navi widget bash)
 $NAVI_BASHRC_END
 EOF
 
+    if grep -Fq "$NAVI_BASHRC_START" "$BASHRC"         && grep -Fq "$NAVI_BASHRC_END" "$BASHRC"         && grep -Fq "source <(navi widget bash)" "$BASHRC"; then
+        rm -f "$bloque"
+        return 0
+    fi
+
     if grep -Fq "$NAVI_BASHRC_START" "$BASHRC"; then
         sed -i "/$NAVI_BASHRC_START/,/$NAVI_BASHRC_END/d" "$BASHRC"
     fi
