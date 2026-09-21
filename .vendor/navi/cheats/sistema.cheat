@@ -1,0 +1,16 @@
+% linux, sistema, administración
+
+# Ver discos y puntos de montaje
+lsblk -o NAME,SIZE,FSTYPE,LABEL,MOUNTPOINTS
+
+# Ver espacio disponible
+df -h
+
+# Ver servicios fallidos
+systemctl --failed
+
+# Editar sudoers de forma segura
+sudo visudo
+
+# Agregar un usuario al grupo sudo
+sudo usermod -aG sudo <usuario>
