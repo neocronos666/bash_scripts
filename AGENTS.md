@@ -451,8 +451,13 @@ Toda dependencia nueva debe:
 
 - tener una función concreta;
 - estar documentada;
-- validarse al inicio;
-- ofrecer un mensaje de instalación claro.
+- validarse justo antes de la operación que la necesita;
+- evitar comprobaciones de dependencias opcionales durante el inicio;
+- ofrecer un mensaje de instalación claro cuando pueda instalarse de forma segura y explícita.
+
+Las dependencias opcionales pueden resolverse bajo demanda. El script debe comprobarlas
+en el punto de uso, explicar para qué se necesitan y pedir autorización antes de instalar
+paquetes o modificar el sistema.
 
 ---
 
@@ -664,7 +669,7 @@ Un agente no debe:
 - introducir un menú principal innecesario;
 - mover funciones específicas a `.lib/` sin justificación;
 - reemplazar Bash por otro lenguaje;
-- instalar dependencias;
+- instalar dependencias sin autorización explícita;
 - ejecutar comandos destructivos;
 - borrar archivos del usuario;
 - alterar configuraciones del sistema;
