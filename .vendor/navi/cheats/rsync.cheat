@@ -1,0 +1,10 @@
+% rsync, archivos, servidor
+
+# Copiar un archivo mostrando progreso
+rsync -ah --progress <origen> <destino>
+
+# Copiar un ISO al storage de Proxmox por SSH
+rsync -ah --progress <iso> <usuario>@<servidor>:/mnt/pve/media/template/iso/
+
+# Sincronizar un directorio conservando atributos
+rsync -ah --progress <origen>/ <usuario>@<servidor>:<destino>/
