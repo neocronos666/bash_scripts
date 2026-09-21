@@ -1,0 +1,16 @@
+% curl, red, descarga
+
+# Descargar un archivo conservando su nombre
+curl -O <url>
+
+# Descargar siguiendo redirecciones
+curl -L -O <url>
+
+# Descargar y guardar con otro nombre
+curl -L -o <archivo> <url>
+
+# Mostrar solo los encabezados HTTP
+curl -I <url>
+
+# Hacer una petición con un método específico
+curl -X <metodo> <url>
