@@ -10,6 +10,59 @@ requerir_comando() {
     return 127
 }
 
+instalar_paquete() {
+    local paquete="$1"
+    local apt_prefix=""
+
+    if [[ "$EUID" -eq 0 ]]; then
+        apt_prefix=""
+    elif comando_disponible sudo; then
+        apt_prefix="sudo"
+    else
+        printf 'Error: se necesita root o sudo para instalar %s.\n' "$paquete" >&2
+        return 126
+    fi
+
+    if comando_disponible apt-get; then
+        $apt_prefix apt-get update && $apt_prefix apt-get install -y "$paquete"
+    elif comando_disponible dnf; then
+        $apt_prefix dnf install -y "$paquete"
+    elif comando_disponible pacman; then
+        $apt_prefix pacman -S --needed --noconfirm "$paquete"
+    elif comando_disponible zypper; then
+        $apt_prefix zypper --non-interactive install "$paquete"
+    else
+        printf 'Error: no se encontró un gestor de paquetes compatible para instalar %s.\n' "$paquete" >&2
+        return 127
+    fi
+}
+
+asegurar_dependencia() {
+    local comando="$1"
+    local paquete="${2:-$1}"
+    local descripcion="${3:-$comando}"
+    local respuesta
+
+    comando_disponible "$comando" && return 0
+
+    printf '\nFalta la herramienta: %s\n' "$comando"
+    printf '%s\n' "$descripcion"
+    printf 'Se puede instalar el paquete: %s\n' "$paquete"
+    read -r -p '¿Instalar ahora? [1=Sí/0=No] ' respuesta
+
+    case "$respuesta" in
+        1)
+            instalar_paquete "$paquete" || return $?
+            ;;
+        *)
+            printf 'No se instaló %s.\n' "$comando" >&2
+            return 1
+            ;;
+    esac
+
+    requerir_comando "$comando"
+}
+
 confirmacion_texto() {
     local mensaje="$1"
     local esperado="$2"
