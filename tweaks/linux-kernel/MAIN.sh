@@ -1,12 +1,29 @@
 #!/usr/bin/env bash
+clear
+
+
+
 
 set -o nounset
 set -o pipefail
 # El tablero conserva el control cuando un script secundario devuelve error.
 
 VERSION="0.1.0"
-BASE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd -- "$SCRIPT_DIR/../.." && pwd)"
+BASE_DIR="$SCRIPT_DIR"
 GRUB_DEFAULT_FILE="/etc/default/grub"
+
+
+
+# Colores compartidos.
+# shellcheck source=../../.lib/colores.sh
+source "$PROJECT_DIR/.lib/colores.sh" || {
+    printf 'Error: no se pudo cargar %s\n' \
+        "$PROJECT_DIR/.lib/colores.sh" >&2
+    exit 1
+}
+
 
 pausar() {
     echo
@@ -297,46 +314,47 @@ menu_grub() {
 }
 
 mostrar_menu() {
+
     clear 2>/dev/null || true
-    printf '%s\n' \
-        '╔════════════════════════════════════════════════════════════╗' \
-        '║                    LINUX KERNEL                           ║' \
-        '╚════════════════════════════════════════════════════════════╝'
+
+    # Banner
+    echo -e "${CYAN}┌───────────────────────────────────────────────────────╾${NC}"
+    echo -e "${CYAN}│${WHITE}   👾 ${WHITE}Kernel activo:${NC} ${GREEN}$(uname -r)${NC} 👾                      ${CYAN}${NC}"
+    echo -e "${CYAN}└────────────────────────────────────────────────────────╾${NC}"
+    #echo    
+    
+    #echo -e " ${WHITE}Kernel activo:${NC} ${GREEN}$(uname -r)${NC}"
+    #echo
+
+    # Flujo principal
+    echo -e "                    ${CYAN}[${YELLOW}0${CYAN}]${WHITE}VOLVER ${NC}"
+    echo -e "                       ${CYAN}│${NC}"
+    echo -e "             ${CYAN}┌─────────┴─────────┐${NC}"    
+    echo -e "      ${GREEN}✳️  AUTOMÁTICO${NC}         ${RED}✴️  MANUAL${NC}"    
+    echo -e "      ${CYAN}[${YELLOW}1${CYAN}]${NC} ${GREEN}auto-update${NC}     ${CYAN}[${YELLOW}2${CYAN}]${NC} ${RED}descargar-kernel${NC}"
+    echo -e "             ${CYAN}│                   ↓${NC}"
+    echo -e "             ${CYAN}│${NC}        ${CYAN}    [${YELLOW}3${CYAN}]${NC} ${RED}gestionar-kernels${NC}"
+    echo -e "             ${CYAN}│                   ↓${NC}"
+    echo -e "             ${CYAN}│${NC}        ${CYAN}    [${YELLOW}4${CYAN}]${NC} ${RED}configurar${NC}"
+    echo -e "             ${CYAN}↓                   ↓${NC}"
+    echo -e "             ${CYAN}│${NC}        ${CYAN}    [${YELLOW}5${CYAN}]${NC} ${RED}compilar${NC}"
+    echo -e "             ${CYAN}│                   ↓${NC}"
+    echo -e "             ${CYAN}│${NC}        ${CYAN}    [${YELLOW}6${CYAN}]${NC} ${RED}instalar-kernel${NC}"   
+    echo -e "             ${CYAN}└─────────┬─────────┘${NC}"
+    echo -e "                       ${CYAN}↓${NC}"
+    echo -e "                   ${CYAN}[${YELLOW}7${CYAN}]${NC} ${WHITE}GRUB${NC}"
     echo
-    echo " Kernel activo: $(uname -r)"
+
+    # Mantenimiento
+    echo -e "                ${WHITE}MANTENIMIENTO${NC}"
+    #echo
+    echo -e "         ${CYAN}[${YELLOW} 8${CYAN}]${NC} ${WHITE}limpiar descargas/fuentes${NC}"
+    echo -e "         ${CYAN}[${YELLOW} 9${CYAN}]${NC} ${WHITE}desinstalar kernels${NC}"
+    echo -e "         ${CYAN}[${YELLOW}10${CYAN}]${NC} ${WHITE}auditoría${NC}"
     echo
-    printf '%s\n' \
-        '        AUTOMÁTICO' \
-        '            │' \
-        '            └──── 1) auto-update' \
-        '                         │' \
-        '                         ▼' \
-        '' \
-        '        MANUAL' \
-        '            2) descargar-kernel' \
-        '                    │' \
-        '                    ▼' \
-        '            3) gestionar-kernels' \
-        '                    │' \
-        '                    ▼' \
-        '            4) configurar' \
-        '                    │' \
-        '                    ▼' \
-        '            5) compilar' \
-        '                    │' \
-        '                    ▼' \
-        '            6) instalar-kernel' \
-        '                    │' \
-        '                    ▼' \
-        '            7) gestionar GRUB' \
-        '' \
-        '        MANTENIMIENTO' \
-        '            8) limpiar descargas/fuentes' \
-        '            9) desinstalar kernels' \
-        '           10) auditoría' \
-        '' \
-        '            0) SALIR'
-    echo
+
+    # echo -e "                         ${CYAN}[${YELLOW}0${CYAN}]${NC} ${WHITE}SALIR${NC}"
+    # echo
 }
 
 main() {
@@ -344,7 +362,7 @@ main() {
 
     while true; do
         mostrar_menu
-        read -rp "Opción: " opcion
+        read -r -p "   🗿${USER:-usuario}⭕ " opcion
         case "$opcion" in
             1) ejecutar_script auto-update.sh ;;
             2) ejecutar_script descargar-kernel.sh ;;

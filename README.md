@@ -8,7 +8,9 @@ Bash Scripts es un **frontend minimalista** de línea de comandos para el shell,
 - **Compatibilidad universal**: Funciona en cualquier terminal Linux sin necesidad de dependencias adicionales.
 - **Flexibilidad**: Puede ser modificado y personalizado según las necesidades del usuario.
 - **Soporte para scripts y directorios**: Permite acceder a scripts y directorios organizados por categorías.
+- **Directorios ejecutables**: Los directorios que contienen un `MAIN.sh` se abren como herramientas independientes desde el navegador.
 - **Ejecución de comandos en vivo**: Se pueden ejecutar comandos directamente desde la interfaz sin salir de ella.
+- **Gestión de kernels**: Incluye caminos automático y manual para descargar, configurar, compilar, instalar y mantener kernels Linux.
 
 ## 🛡️ Instalación 🛡️
 1. Clona el repositorio en tu equipo:
@@ -19,9 +21,9 @@ git clone https://github.com/neocronos666/bash_scripts.git
 ```bash
 cd bash_scripts
 ```
-3. Asegúrate de que los scripts sean ejecutables:
+3. Asegúrate de que los scripts y tableros `MAIN.sh` sean ejecutables:
 ```bash
-chmod +x ayuda comandos-*.sh */*.sh
+find . -type f \( -name '*.sh' -o -name ayuda \) -exec chmod +x {} +
 ```
 4. Agrega el directorio al `PATH` para poder ejecutarlo desde cualquier ubicación:
 ```bash
@@ -58,19 +60,42 @@ NOTA:Al se rparte del prompts, puede ser accedido desde cualquier entorno y los 
          [8] info-terminal.sh
 
 📁 Directorios disponibles:
-         [d1]monitoreo/
-         [d2]scrapping/
-         [d3]setup/
-         [d4]tweaks/
+         [-1]monitoreo/
+         [-2]scrapping/
+         [-3]setup/
+         [-4]tweaks/
 
          [*] ⮩ volver
          [0] ⏿ Salir
 ```
 Puedes:
 - Seleccionar un script escribiendo su número.
-- Abrir un directorio escribiendo `d` seguido del número.
+- Seleccionar un directorio escribiendo `-` seguido de su número; por ejemplo, `-4` abre `tweaks/`.
 - Escribir un comando directamente, el cual se ejecutará en la terminal sin salir de la interfaz.
+- Escribir `**` para consultar la información del clima.
 - Presionar `0` para salir.
+
+### Navegación por directorios
+
+`ayuda` muestra los scripts con números positivos (`1`, `2`, `3`...) y los
+directorios con números precedidos por un guion (`-1`, `-2`, `-3`...). El
+guion permite distinguir visualmente una acción ejecutable de un cambio de
+directorio y mantiene la selección cómoda desde el teclado numérico.
+
+Los directorios se muestran de dos formas:
+
+- **Directorio navegable**: no contiene `MAIN.sh`. Al seleccionarlo con `-N`,
+  `ayuda` entra en él y vuelve a construir la lista de scripts y
+  subdirectorios disponibles. En el menú se muestra en rojo.
+- **Directorio ejecutable**: contiene un archivo `MAIN.sh`. Al seleccionarlo
+  con `-N`, `ayuda` ejecuta su `MAIN.sh` desde ese mismo directorio. Cuando el
+  tablero termina, se regresa al navegador sin cambiar el directorio que se
+  estaba explorando. En el menú se muestra en verde.
+
+Actualmente `tweaks/linux-kernel/` es un directorio ejecutable. Esta
+convención permite que un conjunto relacionado de scripts conserve sus
+rutas relativas y tenga su propio menú, sin incorporar su lógica dentro de
+`ayuda`.
 
 La opción `*` puede seguir subiendo más allá del repositorio. Es una función
 intencional para usar `ayuda` como navegador de scripts del sistema.
@@ -105,6 +130,32 @@ histórico y no forma parte de estas comprobaciones.
 
 ## 📃 Scripts disponibles 📃
 Los scripts incluidos proporcionan diversas funcionalidades:
+
+### 🐧 Gestión de kernels Linux
+
+El directorio ejecutable `tweaks/linux-kernel/` contiene un tablero para dos
+formas de trabajo:
+
+- **Actualización automática**: consulta kernels binarios de Ubuntu
+  Noble/Linux Mint disponibles mediante APT, muestra los paquetes y permite
+  instalarlos sin eliminar kernels anteriores, reiniciar ni cambiar el
+  kernel predeterminado de GRUB.
+- **Flujo manual**: enlaza los scripts para descargar fuentes oficiales,
+  administrar árboles dentro de `.kernels/`, guardar configuraciones y
+  compilaciones en `.cfgs/`, compilar paquetes `.deb` e instalar el resultado.
+- **Mantenimiento**: permite limpiar descargas locales, auditar el sistema y
+  desinstalar kernels instalados con protecciones para el kernel activo, el
+  predeterminado y el último kernel arrancable.
+- **Gestión de GRUB**: permite elegir el kernel predeterminado después de
+  probarlo manualmente, ajustar el timeout y la visibilidad del menú,
+  conservar la detección de otros sistemas y regenerar la configuración.
+
+Para abrirlo desde `ayuda`, se selecciona el número con guion asignado a
+`tweaks/linux-kernel/`. También puede ejecutarse directamente:
+
+```bash
+./tweaks/linux-kernel/MAIN.sh
+```
 
 ### 📊 Información del sistema 📊
 - `info-environment.sh`: Muestra información sobre las variables de entorno.
@@ -151,4 +202,3 @@ aplicable.
 Este proyecto fue desarrollado por [Sergio Silvestri](https://github.com/neocronos666).
 
 Ojalá te sea útil!🔰
-
