@@ -3,11 +3,11 @@
 set -euo pipefail
 
 # Editar libremente las etiquetas mostradas en el selector.
-TIPO_1='Tipo 1'  # Azul
-TIPO_2='Tipo 2'  # Cian
-TIPO_3='Tipo 3'  # Magenta
-TIPO_4='Tipo 4'  # Amarillo
-TIPO_5='Tipo 5'  # Verde
+TIPO_1='Maquinas con Windows/DOS'  # Azul
+TIPO_2='Distros Linux'  # Cian
+TIPO_3='SERVIDORES PROXMOX'  # Magenta
+TIPO_4='Servidores de Apps'  # Amarillo
+TIPO_5='Maquinas de Pruebas'  # Verde
 
 if [[ ! -t 0 || ! -t 1 ]]; then
   printf 'Este instalador requiere una terminal interactiva.\n' >&2
