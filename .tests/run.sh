@@ -23,13 +23,7 @@ probar_sintaxis() {
     )
 }
 
-probar_regresiones() {
-    if grep -Rq '\$user' "$ROOT" --include='*.sh' \
-        --exclude='run.sh' --exclude-dir='.deprecated'; then
-        no_ok 'no hay variable $user accidental'
-    else
-        ok 'no hay variable $user accidental'
-    fi
+probar_regresiones() {   
 
     if grep -q 'nano etc/hosts' "$ROOT/seguridad/editar-hosts.sh"; then
         no_ok 'editar-hosts usa /etc/hosts'

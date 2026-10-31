@@ -1,7 +1,7 @@
 .PHONY: check syntax shellcheck
 
 check:
-	bash tests/run.sh
+	bash .tests/run.sh
 
 syntax:
 	find . -path './.git' -prune -o -path './.deprecated' -prune -o \

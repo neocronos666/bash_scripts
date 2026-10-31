@@ -45,28 +45,35 @@ Aparecerá el siguiente menú interactivo:
 
 NOTA:Al se rparte del prompts, puede ser accedido desde cualquier entorno y los comandos se ejecutan en ese entorno, muy util para conocer rapidamente los entornos de desarrollo presentes en terminales desconocidas.
 ```
-🔰             
-    ╭─────────────────────────────────────────────────────────────────╮
-    │        🧃  COMANDOS INTERACTIVOS RAPIDOS               │
-    ╰────────────────────────────────────────────────────────────────╯
-📝 Scripts disponibles:
-         [1] comandos-generales.sh
-         [2] comandos-git.sh
-         [3] comandos-server.sh
-         [4] desinstalar-y-limpiar.sh
-         [5] info-environment.sh
-         [6] info-hardware.sh
-         [7] info-ip.sh
-         [8] info-terminal.sh
-
-📁 Directorios disponibles:
+🔰  ╭───────────────────────────────────────────────────────╮
+    │        🖳  COMANDOS INTERACTIVOS RAPIDOS               │
+    ╰──╥────────────────────────────────────────────────────╯
+       ║ ⛶ Directorio:~/Documentos/bash_scripts
+       ╙───────────────────────────────────────────────╾
+    📝 Scripts disponibles:
+         [1] ayuda.sh
+         [2] comandos-generales.sh
+         [3] comandos-git.sh
+         [4] comandos-server.sh
+         [5] desinstalar-y-limpiar.sh
+         [6] info-environment.sh
+         [7] info-hardware.sh
+         [8] info-ip.sh
+         [9] info-terminal.sh
+         [10] red.sh
+         [**] Informacion de Clima⛅
+    📁 Directorios disponibles:
          [-1]monitoreo/
          [-2]scrapping/
-         [-3]setup/
-         [-4]tweaks/
+         [-3]seguridad/
+         [-4]setup/
+         [-5]tests/
+         [-6]tweaks/
+         [*] ⮹ volver
+         [0] ⮿ Salir
+    ╼─┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈─╾
+   🗿neocronos⭕ 
 
-         [*] ⮩ volver
-         [0] ⏿ Salir
 ```
 Puedes:
 - Seleccionar un script escribiendo su número.

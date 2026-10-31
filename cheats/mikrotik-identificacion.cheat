@@ -1,0 +1,64 @@
+# Formato CHEAT v1: TIPO: contenido (UTF-8; datos, nunca código ejecutable)
+TITLE: MIKROTIK hAP ax3 — Identificación de dispositivos
+NOTE: RouterOS 7 · Fuente: 31-10-2026
+RULE:
+SECTION: CONSULTAS · Solo lectura
+TEXT: 1) Clientes Wi-Fi asociados (SSID, MAC, señal y tiempo):
+CMD: /interface wifi registration-table print
+TEXT: 2) Clientes de granjaSomatica (invitados):
+CMD: /interface wifi registration-table print where interface=wifi2
+TEXT: 3) Clientes de 666 (privado):
+CMD: /interface wifi registration-table print where interface=wifi-neo-private
+TEXT: 4) Todas las concesiones DHCP:
+CMD: /ip dhcp-server lease print detail
+TEXT: 5) Concesiones DHCP activas (bound):
+CMD: /ip dhcp-server lease print where status=bound
+TEXT: 6) Concesiones activas de granjaSomatica (192.168.50.0/24):
+CMD: /ip dhcp-server lease print where server=dhcp-neo-guest and status=bound
+TEXT: 7) Concesiones activas de LAN privada:
+CMD: /ip dhcp-server lease print where server=dhcp-neo-lan and status=bound
+TEXT: 8) Leases estáticas (reservas):
+CMD: /ip dhcp-server lease print where dynamic=no
+TEXT: 9) Leases dinámicas (no necesariamente desconocidos):
+CMD: /ip dhcp-server lease print where dynamic=yes
+TEXT: 10) Equipos vistos en ARP (puede incluir entradas antiguas):
+CMD: /ip arp print
+TEXT: 11) Puertos del bridge:
+CMD: /interface bridge port print
+TEXT: 12) Hosts aprendidos por bridges (incluye cableados):
+CMD: /interface bridge host print
+TEXT: 13) IP del router e interfaces:
+CMD: /ip address print
+TEXT: 14) Servidores DHCP y bridges:
+CMD: /ip dhcp-server print detail
+TEXT: 15) Eventos recientes Wi-Fi / DHCP (si están registrados):
+CMD: /log print where topics~"wifi"
+CMD: /log print where topics~"dhcp"
+TEXT: 16) Consultar un dispositivo concreto por MAC:
+CMD: /ip dhcp-server lease print detail where mac-address=94:EC:13:0B:62:5A
+TEXT: 17) Contadores de aislamiento de invitados:
+CMD: /ip firewall filter print stats where comment~"NEO-GUEST"
+RULE:
+SECTION: CLASIFICACIÓN RECOMENDADA
+TEXT: En comment de cada lease:
+EXAMPLE: CONOCIDO | CAMARA | EZVIZ H8C patio
+EXAMPLE: CONOCIDO | MOVIL | Armor-X12-Pro
+EXAMPLE: CONOCIDO | SERVIDOR | black-cube
+EXAMPLE: CONOCIDO | IMPRESORA | Samsung M2020
+EXAMPLE: PENDIENTE | Revisar identidad
+TEXT: Listar leases etiquetadas:
+CMD: /ip dhcp-server lease print where comment~"CONOCIDO"
+TEXT: Listar leases sin esa etiqueta (no implica intrusión):
+CMD: /ip dhcp-server lease print where comment!~"CONOCIDO"
+RULE:
+SECTION: EJEMPLO DE ETIQUETADO · Modifica configuración
+WARN: NO ejecutar sin revisar la MAC, dispositivo y efecto.
+CMD: /ip dhcp-server lease set [find where mac-address=94:EC:13:0B:62:5A] comment="CONOCIDO | CAMARA | EZVIZ H8C patio"
+RULE:
+SECTION: NOTAS
+NOTE: La tabla Wi-Fi refleja asociaciones actuales, no todo el historial.
+NOTE: Una lease bound confirma concesión vigente, no actividad continua.
+NOTE: MAC aleatorias pueden aparecer como dispositivos nuevos.
+NOTE: El nombre del equipo puede venir del cliente y no prueba identidad.
+NOTE: Las consultas anteriores son de solo lectura; el etiquetado modifica configuración.
+WARN: Una MAC conocida no equivale a autenticación ni evita suplantación.

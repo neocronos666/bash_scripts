@@ -1,0 +1,74 @@
+# Manual autocontenido del formato .cheat v1
+TITLE: ACERCA DE CHEAT — Guía de creación
+NOTE: Formato de texto UTF-8 para ayudas en terminal · Motor cheats/MAIN.sh v0.1.1
+RULE:
+SECTION: 1. ¿QUÉ ES UN ARCHIVO .CHEAT?
+TEXT: Un archivo de texto que describe cómo mostrar una ayuda en consola.
+TEXT: Se interpreta línea por línea. Nunca ejecuta las instrucciones de CMD.
+TEXT: Guardalo con extensión .cheat dentro del directorio cheats/.
+TEXT: Al reiniciar el menú, el visor detecta automáticamente los nuevos archivos.
+BLANK:
+SECTION: 2. SINTAXIS GENERAL
+EXAMPLE: TIPO: contenido
+TEXT: Cada directiva comienza al inicio de la línea con un nombre en MAYÚSCULAS.
+TEXT: Los dos puntos separan el tipo del contenido; se elimina un espacio inicial opcional.
+TEXT: Se conserva el resto del contenido, incluidos los dos puntos que aparezcan dentro.
+TEXT: Una línea vacía crea un salto de línea. Las líneas que empiezan con # son comentarios.
+TEXT: Las líneas sin dos puntos se muestran literalmente, sin formato especial.
+TEXT: Los tipos desconocidos generan un aviso y se muestran literalmente.
+BLANK:
+SECTION: 3. INSTRUCCIONES DISPONIBLES
+TITLE: TITLE: encabezado principal
+TEXT: Título destacado en cian y negrita, precedido por ▰.
+SECTION: SECTION: nombre de sección
+TEXT: Subtítulo en verde y negrita, precedido por ▸.
+TEXT: TEXT: explicación o descripción
+TEXT: Texto normal con sangría de dos espacios.
+CMD: CMD: comando (ejemplo de sintaxis)
+TEXT: Comando amarillo con cuatro espacios de sangría y un símbolo $.
+NOTE: NOTE: consejo o aclaración
+TEXT: Nota cian con símbolo ℹ.
+WARN: WARN: advertencia
+TEXT: Aviso rojo en negrita con símbolo ⚠.
+EXAMPLE: EXAMPLE: ejemplo conceptual
+TEXT: Ejemplo magenta con símbolo →; útil para mostrar resultados o sintaxis.
+RULE:
+TEXT: RULE: traza una línea divisoria (ignora el contenido).
+BLANK:
+TEXT: BLANK: agrega una línea en blanco (ignora el contenido).
+BLANK:
+SECTION: 4. PATRÓN RECOMENDADO PARA COMANDOS
+TEXT: Escribí una descripción corta y justo debajo su comando.
+EXAMPLE: TEXT: Consultar clientes Wi-Fi activos:
+EXAMPLE: CMD: /interface wifi registration-table print
+TEXT: La sangría distingue fácilmente comando de explicación.
+TEXT: Agrupá comandos afines usando SECTION; no es necesario numerar todo.
+BLANK:
+SECTION: 5. ESTILO Y LEGIBILIDAD
+TEXT: Priorizá líneas cortas: la ayuda debe caber en media pantalla de Guake.
+TEXT: Usá TITLE una vez por documento y SECTION para organizar temas.
+TEXT: Elegí TEXT para explicaciones, CMD para comandos y WARN para riesgos.
+TEXT: Evitá tablas anchas, tabulaciones y secuencias ANSI escritas a mano.
+TEXT: Los colores los asigna MAIN.sh: no se configuran individualmente en v1.
+TEXT: Los comandos no se copian ni ejecutan automáticamente.
+BLANK:
+SECTION: 6. NAVEGACIÓN Y PAGINACIÓN
+TEXT: Desde bash_scripts, seleccioná el directorio cheats/ (contiene MAIN.sh).
+TEXT: Elegí un archivo del menú por su número; 0 sale y ? muestra ayuda.
+TEXT: Si existe less, usá ↑/↓, PgUp/PgDn, / para buscar, n para siguiente, q para volver.
+TEXT: Sin less, el visor intenta more o muestra el contenido directamente.
+BLANK:
+SECTION: 7. PRUEBA RÁPIDA
+TEXT: Creá cheats/mi-ayuda.cheat con directivas como las de este manual.
+CMD: bash cheats/MAIN.sh cheats/mi-ayuda.cheat
+TEXT: Revisá que los títulos, comandos, notas y saltos sean legibles.
+TEXT: Para validar la sintaxis del motor (no el documento):
+CMD: bash -n cheats/MAIN.sh
+BLANK:
+SECTION: 8. SEGURIDAD Y LIMITACIONES
+WARN: Un .cheat es documentación, no un script ni un formato de automatización.
+TEXT: El visor no valida la corrección técnica de los comandos documentados.
+TEXT: Marcá explícitamente las operaciones destructivas o de escritura con WARN.
+NOTE: Si documentás RouterOS, distinguí consultas de comandos que modifican configuración.
+RULE:
+NOTE: Versión de formato: v1 · Compatible con el visor del prototipo.
