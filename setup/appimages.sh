@@ -1,0 +1,497 @@
+#!/usr/bin/env bash
+# bash_scripts/setup/appimages.sh — Gestor de AppImages para Linux Mint XFCE.
+# Interfaz integrada con .lib/colores.sh y .lib/comunes.sh (fallback autónomo).
+# Sin sudo ni dependencias obligatorias fuera de utilidades habituales de GNU/Linux.
+set -u
+shopt -s nocasematch
+
+APP_DIR="$HOME/Aplicaciones"
+DESKTOP_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/applications"
+ICON_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/icons/appimage-manager"
+BOOKMARKS="$HOME/.config/gtk-3.0/bookmarks"
+TMP_DIR=""
+
+# Cargar bibliotecas compartidas sin depender del directorio de ejecución.
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
+LIB_DIR="$SCRIPT_DIR/../.lib"
+[[ -r "$LIB_DIR/colores.sh" ]] && source "$LIB_DIR/colores.sh"
+[[ -r "$LIB_DIR/comunes.sh" ]] && source "$LIB_DIR/comunes.sh"
+
+# Modo autónomo / terminal sin colores (logs, pipes, NO_COLOR).
+: "${RED:=$'\033[31m'}" "${GREEN:=$'\033[32m'}" "${CYAN:=$'\033[36m'}"
+: "${YELLOW:=$'\033[33m'}" "${WHITE:=$'\033[97m'}" "${GRAY:=$'\033[90m'}" "${NC:=$'\033[0m'}"
+BLUE=$'\033[34m'; MAGENTA=$'\033[35m'; BOLD=$'\033[1m'; DIM=$'\033[2m'
+# Las librerías compartidas guardan secuencias ANSI como texto (\e[...m).
+# Convertirlas una sola vez a caracteres ESC reales para printf '%s'.
+for _color in RED GREEN CYAN YELLOW WHITE GRAY NC BLUE MAGENTA BOLD DIM; do
+    printf -v "$_color" '%b' "${!_color}"
+done
+unset _color
+if [[ ! -t 1 || -n "${NO_COLOR:-}" || "${TERM:-}" == dumb ]]; then
+    RED=''; GREEN=''; CYAN=''; YELLOW=''; WHITE=''; GRAY=''; NC=''
+    BLUE=''; MAGENTA=''; BOLD=''; DIM=''
+fi
+# Herramienta definida por comunes.sh, con fallback independiente.
+if ! declare -F comando_disponible >/dev/null; then
+    comando_disponible() { command -v "$1" >/dev/null 2>&1; }
+fi
+
+cleanup() { [[ -n "$TMP_DIR" && -d "$TMP_DIR" ]] && rm -rf -- "$TMP_DIR"; }
+trap cleanup EXIT
+trap 'printf "\n%sInterrumpido.%s\n" "$YELLOW" "$NC"; exit 130' INT
+
+info() { printf '\n%sℹ%s  %s\n' "$CYAN" "$NC" "$*"; }
+error() { printf '%s✖ ERROR:%s %s\n' "$RED" "$NC" "$*" >&2; }
+ok() { printf '%s✔%s  %s\n' "$GREEN" "$NC" "$*"; }
+warn() { printf '%s!%s  %s\n' "$YELLOW" "$NC" "$*"; }
+section() { printf '\n%s%s▸ %s%s\n' "$BOLD" "$MAGENTA" "$*" "$NC"; }
+ui_choice() { printf '  %s%2s%s  %s\n' "$YELLOW" "$1" "$NC" "$2"; }
+ui_header() {
+    printf '\n%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' "$CYAN" "$NC"
+    printf '%s%s  ◈  GESTOR DE APPIMAGES%s  %sMint · XFCE%s\n' "$BOLD" "$WHITE" "$NC" "$GRAY" "$NC"
+    printf '%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' "$CYAN" "$NC"
+    printf '%s  Directorio: %s%s\n' "$GRAY" "$APP_DIR" "$NC"
+}
+pause() { read -r -p 'Enter para continuar...' _ || :; }
+ui_clear() {
+    # Solo limpiar pantallas interactivas; preservar logs y ejecución por pipes.
+    if [[ -t 1 && -t 0 && "${TERM:-dumb}" != dumb ]]; then
+        printf '\033[2J\033[H'
+    fi
+}
+
+confirm() {
+    local a
+    printf '%s?%s  %s %s[s/N]:%s ' "$YELLOW" "$NC" "${1:-¿Continuar?}" "$GRAY" "$NC"
+    read -r a || return 1
+    [[ "${a,,}" == s || "${a,,}" == si || "${a,,}" == sí ]]
+}
+
+# Escapa caracteres peligrosos para claves de archivos .desktop; elimina saltos de línea.
+desktop_value() { local v=${1//$'\n'/ }; v=${v//$'\r'/ }; v=${v//\\/\\\\}; printf '%s' "$v"; }
+# El campo Exec usa una regla de comillas especial (freedesktop.org).
+exec_quote() { local v=$1; v=${v//\\/\\\\}; v=${v//\"/\\\"}; v=${v//\$/\\\$}; v=${v//\`/\\\`}; printf '"%s"' "$v"; }
+uri_encode() {
+    local in=$1 out='' c hex i
+    LC_ALL=C
+    for ((i=0;i<${#in};i++)); do
+        c=${in:i:1}
+        case "$c" in [a-zA-Z0-9._~/-]) out+="$c" ;; *) printf -v hex '%%%02X' "'$c"; out+="$hex" ;; esac
+    done
+    printf '%s' "$out"
+}
+
+preparar_entorno() {
+    [[ -d "$APP_DIR" ]] || { mkdir -p -- "$APP_DIR" || return 1; ok "Carpeta creada: $APP_DIR"; }
+    mkdir -p -- "$DESKTOP_DIR" "$ICON_DIR" || return 1
+    # Marcador en la barra lateral de Thunar (sin alterar los existentes).
+    mkdir -p -- "${BOOKMARKS%/*}" || return 1
+    local uri="file://$(uri_encode "$APP_DIR")"
+    if [[ ! -f "$BOOKMARKS" ]] || ! grep -Fq "${uri} " "$BOOKMARKS"; then
+        printf '%s Aplicaciones\n' "$uri" >> "$BOOKMARKS" || return 1
+    fi
+}
+
+# Salidas globales MET_NAME MET_CATS MET_ICON MET_UPDATE.
+metadata() {
+    local file=$1 root desktop raw name cats icon update line field
+    MET_NAME=''; MET_CATS=''; MET_ICON=''; MET_UPDATE=''
+    root=$(mktemp -d "${TMPDIR:-/tmp}/appimage-meta.XXXXXXXX") || return 1
+    # --appimage-extract utiliza el runtime incluido: solo hacerlo con archivos confiables.
+    if (cd "$root" && "$file" --appimage-extract >/dev/null 2>&1); then
+        desktop=$(find "$root/squashfs-root" -maxdepth 2 -type f -iname '*.desktop' -print -quit 2>/dev/null)
+        if [[ -z "$desktop" ]]; then
+            desktop=$(find "$root/squashfs-root/usr/share/applications" -maxdepth 1 -type f -iname '*.desktop' -print -quit 2>/dev/null)
+        fi
+        if [[ -n "$desktop" ]]; then
+            name=$(sed -n '/^\[Desktop Entry\]$/,/^\[/{s/^Name=//p;}' "$desktop" | head -n 1)
+            cats=$(sed -n '/^\[Desktop Entry\]$/,/^\[/{s/^Categories=//p;}' "$desktop" | head -n 1)
+            icon=$(sed -n '/^\[Desktop Entry\]$/,/^\[/{s/^Icon=//p;}' "$desktop" | head -n 1)
+            MET_NAME=$name; MET_CATS=$cats
+            if [[ -n "$icon" ]]; then
+                # Buscar primero un icono en la raíz del AppDir, luego en hicolor.
+                local candidate=''
+                if [[ -f "$root/squashfs-root/$icon" ]]; then
+                    candidate="$root/squashfs-root/$icon"
+                else
+                    candidate=$(find "$root/squashfs-root" -type f \( -iname "${icon}.png" -o -iname "${icon}.svg" -o -iname "${icon}.xpm" \) -print -quit 2>/dev/null)
+                fi
+                if [[ -n "$candidate" && -f "$candidate" ]]; then
+                    MET_ICON="$candidate"
+                    # El root temporal se conserva hasta que se copie el icono.
+                    TMP_DIR="$root"
+                fi
+            fi
+        fi
+    fi
+    update=$("$file" --appimage-updateinformation 2>/dev/null | head -n 1) || :
+    [[ "$update" == gh-releases-zsync\|* || "$update" == zsync\|* ]] && MET_UPDATE=$update
+    if [[ "$TMP_DIR" != "$root" ]]; then rm -rf -- "$root"; fi
+}
+
+limpiar_nombre() {
+    local name=$1
+    name=${name##*/}; name=${name%.AppImage}; name=${name%.appimage}
+    name=$(printf '%s' "$name" | sed -E 's/[_]+/ /g; s/([ -]+)(v?[0-9]+([.][0-9]+)+)([ -]+|$)/ /g; s/([ -]+)(x86_64|aarch64|arm64|amd64|i386|linux)([ -]+|$)/ /Ig; s/[[:space:]]+/ /g; s/^[[:space:]_.-]+//; s/[[:space:]_.-]+$//')
+    printf '%s' "$name"
+}
+slugify() {
+    local slug
+    slug=$(printf '%s' "$1" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')
+    [[ -n "$slug" ]] || slug="app-$(printf '%s' "$1" | cksum | cut -d' ' -f1)"
+    printf '%s' "$slug"
+}
+validar_categorias() {
+    local cats=$1 c valid=''
+    local allowed='AudioVideo Audio Video Development Education Game Graphics Network Office Science Settings System Utility'
+    IFS=';' read -r -a cat_array <<< "$cats"
+    for c in "${cat_array[@]}"; do
+        for k in $allowed; do [[ "$c" == "$k" ]] && valid+="$c;"; done
+    done
+    printf '%s' "$valid"
+}
+categoria_legible() {
+    local cats=$1
+    case ";$cats" in
+        *';Development;'*) printf 'Desarrollo' ;;
+        *';Education;'*) printf 'Educación' ;;
+        *';Graphics;'*) printf 'Gráficos' ;;
+        *';Network;'*) printf 'Internet' ;;
+        *';Office;'*) printf 'Oficina' ;;
+        *';AudioVideo;'*|*';Audio;'*|*';Video;'*) printf 'Multimedia' ;;
+        *';Game;'*) printf 'Juegos' ;;
+        *';Settings;'*) printf 'Configuración' ;;
+        *';System;'*) printf 'Sistema' ;;
+        *';Science;'*) printf 'Ciencia' ;;
+        *';Utility;'*) printf 'Accesorios' ;;
+        *) printf 'Sin categoría' ;;
+    esac
+}
+elegir_categoria() {
+    local chosen
+    ui_clear
+    ui_header
+    section 'Categoría para el menú XFCE'
+    ui_choice 1 'Accesorios' ; ui_choice 2 'Desarrollo'
+    ui_choice 3 'Educación'  ; ui_choice 4 'Gráficos'
+    ui_choice 5 'Internet'   ; ui_choice 6 'Oficina'
+    ui_choice 7 'Multimedia' ; ui_choice 8 'Juegos'
+    ui_choice 9 'Sistema'    ; ui_choice 10 'Configuración' 
+    read -r -p 'Elegí [1]: ' chosen || return 1
+    case "${chosen:-1}" in
+        1) MET_CATS='Utility;' ;; 2) MET_CATS='Development;' ;; 3) MET_CATS='Education;' ;;
+        4) MET_CATS='Graphics;' ;; 5) MET_CATS='Network;' ;; 6) MET_CATS='Office;' ;;
+        7) MET_CATS='AudioVideo;' ;; 8) MET_CATS='Game;' ;; 9) MET_CATS='System;' ;;
+        10) MET_CATS='Settings;' ;; *) MET_CATS='Utility;' ;;
+    esac
+}
+
+# Solo administra archivos marcados como propios.
+launcher_for_path() {
+    local f path
+    for f in "$DESKTOP_DIR"/appimage-manager-*.desktop; do
+        [[ -f "$f" ]] || continue
+        path=$(sed -n 's/^X-AppImage-Manager-Path=//p' "$f" | head -n1)
+        [[ "$path" == "$1" ]] && { printf '%s' "$f"; return 0; }
+    done
+    return 1
+}
+
+integrar() {
+    local file=$1 mode=${2:-interactive} existing slug desktop icon_path name cats oldpath answer ext
+    [[ -f "$file" ]] || { error "No existe $file"; return 1; }
+    metadata "$file"
+    name=$(limpiar_nombre "${MET_NAME:-${file##*/}}")
+    [[ -n "$name" ]] || name='Aplicación AppImage'
+    slug=$(slugify "$name")
+    desktop="$DESKTOP_DIR/appimage-manager-$slug.desktop"
+    existing=$(launcher_for_path "$file") || existing=''
+    [[ -n "$existing" ]] && desktop="$existing"
+    if [[ -f "$desktop" && "$mode" != force ]]; then
+        info "Ya existe un lanzador: $desktop"
+        ui_choice 1 'Reemplazar / reparar'
+        ui_choice 2 'Omitir'
+        read -r -p 'Opción [2]: ' answer || return 1
+        [[ "$answer" == 1 ]] || { cleanup; TMP_DIR=''; return 0; }
+        oldpath=$(sed -n 's/^X-AppImage-Manager-Path=//p' "$desktop" | head -n1)
+        [[ -n "$oldpath" && "$oldpath" != "$file" ]] && warn "Este lanzador apuntaba a $oldpath"
+    fi
+    cats=$(validar_categorias "$MET_CATS")
+    if [[ -z "$cats" ]]; then elegir_categoria || return 1; cats="$MET_CATS"; fi
+    icon_path='application-x-executable'
+    if [[ -n "$MET_ICON" && -f "$MET_ICON" ]]; then
+        ext=${MET_ICON##*.}; ext=${ext,,}
+        case "$ext" in png|svg|xpm)
+            icon_path="$ICON_DIR/$slug.$ext"
+            cp -- "$MET_ICON" "$icon_path" || return 1
+            ;; esac
+    fi
+    # Desktop entry generado de cero; sin interpolar líneas no confiables de AppImage.
+    {
+        printf '[Desktop Entry]\nType=Application\nName=%s\n' "$(desktop_value "$name")"
+        printf 'Exec=%s\n' "$(exec_quote "$file")"
+        printf 'TryExec=%s\n' "$(desktop_value "$file")"
+        printf 'Icon=%s\nCategories=%s\nTerminal=false\n' "$icon_path" "$cats"
+        printf 'X-AppImage-Manager-Path=%s\nX-AppImage-Manager-Version=1\n' "$(desktop_value "$file")"
+    } > "$desktop" || return 1
+    chmod 644 "$desktop"
+    comando_disponible update-desktop-database && update-desktop-database "$DESKTOP_DIR" >/dev/null 2>&1 || :
+    ok "Integrada: $name → $(categoria_legible "$cats") [$cats]"
+    cleanup; TMP_DIR=''
+}
+
+# Busca AppImages sin entrar a directorios ocultos ni a la carpeta destino.
+escanear() {
+    local -a files=() selected=()
+    local file choice
+    while IFS= read -r -d '' file; do files+=("$file"); done < <(
+        find "$HOME" \( -type d \( -name '.*' -o -path "$APP_DIR" \) -prune \) -o \
+            \( -type f -iname '*.appimage' -print0 \) 2>/dev/null
+    )
+    if ((${#files[@]} == 0)); then info 'No se encontraron AppImages fuera de ~/Aplicaciones.'; return 0; fi
+    ui_clear; ui_header
+    section "AppImages encontradas (${#files[@]})"
+    local i=0
+    for file in "${files[@]}"; do ui_choice "$((++i))" "$file"; done
+    confirm "¿Mover los ${#files[@]} archivos a ~/Aplicaciones?" || return 0
+    for file in "${files[@]}"; do importar_archivo "$file"; done
+}
+
+importar_archivo() {
+    local from=$1 to answer
+    [[ -f "$from" && ! -L "$from" ]] || { error "Archivo inválido: $from"; return 1; }
+    [[ "$from" == *.AppImage || "$from" == *.appimage ]] || { error 'Se requiere extensión .AppImage'; return 1; }
+    to="$APP_DIR/${from##*/}"
+    if [[ "$from" != "$to" ]]; then
+        if [[ -e "$to" ]]; then
+            info "Ya existe: $to"
+            confirm '¿Reemplazar el archivo de destino?' || return 0
+            # Reemplazo explícito: mv -f, pero no seguir links en destino.
+        fi
+        mv -- "$from" "$to" || { error "No se pudo mover $from"; return 1; }
+    fi
+    chmod u+x -- "$to" || return 1
+    integrar "$to"
+}
+
+agregar() {
+    local from
+    ui_clear; ui_header
+    section 'Importar AppImages'
+    printf '%s➜%s  Ruta de AppImage (vacío = escanear HOME): ' "$GREEN" "$NC"
+    read -r from || return 0
+    if [[ -z "$from" ]]; then escanear; return; fi
+    from=${from/#\~\//$HOME/}
+    [[ "$from" == /* ]] || from="$PWD/$from"
+    # Resolver ruta física para evitar que un enlace escape a directorios imprevistos.
+    from=$(realpath -e -- "$from" 2>/dev/null) || { error 'Ruta inexistente'; return 1; }
+    info "Archivo: $from"
+    confirm '¿Importar este archivo?' && importar_archivo "$from"
+}
+
+listar_rutas() {
+    local f
+    for f in "$APP_DIR"/*; do
+        [[ -f "$f" && ! -L "$f" && "$f" == *.AppImage ]] && printf '%s\0' "$f"
+    done
+}
+seleccionar() {
+    local -a files=()
+    local f n index
+    while IFS= read -r -d '' f; do files+=("$f"); done < <(listar_rutas)
+    ((${#files[@]})) || { info 'No hay AppImages en ~/Aplicaciones.'; return 1; }
+    ui_clear >&2; ui_header >&2
+    printf '\n%s▸ Aplicaciones disponibles%s\n' "$MAGENTA" "$NC" >&2
+    for ((n=0;n<${#files[@]};n++)); do
+        printf '  %s%2d%s  %s\n' "$YELLOW" "$((n+1))" "$NC" "${files[n]##*/}" >&2
+    done
+    printf '%s➜%s  Número (0 = cancelar): ' "$GREEN" "$NC" >&2
+    read -r index || return 1
+    [[ "$index" =~ ^[0-9]+$ ]] && ((index>=1 && index<=${#files[@]})) || return 1
+    printf '%s' "${files[index-1]}"
+}
+ejecutar() {
+    local f
+    f=$(seleccionar) || return 0
+    [[ -x "$f" ]] || chmod u+x -- "$f" || return 1
+    info "Ejecutando: ${f##*/}"
+    ("$f" >/dev/null 2>&1 </dev/null &)
+}
+reparar() {
+    local -a files=()
+    local f index n
+    while IFS= read -r -d '' f; do files+=("$f"); done < <(listar_rutas)
+    ((${#files[@]})) || { info 'No hay AppImages en ~/Aplicaciones.'; return 0; }
+    ui_clear; ui_header
+    section 'Reparación de accesos directos'
+    for ((n=0;n<${#files[@]};n++)); do
+        ui_choice "$((n+1))" "${files[n]##*/}"
+    done
+    printf '\n'
+    ui_choice T 'Reparar TODOS los lanzadores'
+    ui_choice 0 'Volver'
+    printf '%s➜%s  Opción: ' "$GREEN" "$NC"
+    read -r index || return 0
+    if [[ "$index" == [tT] ]]; then
+        confirm "¿Reparar los ${#files[@]} lanzadores?" || return 0
+        local failed=0
+        section 'Resultado y categoría asignada'
+        for f in "${files[@]}"; do integrar "$f" force || ((failed+=1)); done
+        ((failed==0)) || warn "$failed lanzador(es) no pudieron repararse."
+    elif [[ "$index" =~ ^[0-9]+$ ]] && ((index>=1 && index<=${#files[@]})); then
+        integrar "${files[index-1]}"
+    fi
+}
+eliminar() {
+    local f launcher slug icon
+    f=$(seleccionar) || return 0
+    launcher=$(launcher_for_path "$f") || launcher=''
+    info "Se eliminará: $f"
+    [[ -n "$launcher" ]] && info "Y su lanzador: $launcher"
+    confirm '¿Eliminar definitivamente?' || return 0
+    if [[ -n "$launcher" ]]; then
+        slug=${launcher##*/appimage-manager-}; slug=${slug%.desktop}
+        rm -f -- "$launcher" "$ICON_DIR/$slug.png" "$ICON_DIR/$slug.svg" "$ICON_DIR/$slug.xpm" || return 1
+    fi
+    rm -- "$f" || return 1
+    comando_disponible update-desktop-database && update-desktop-database "$DESKTOP_DIR" >/dev/null 2>&1 || :
+    ok 'Aplicación eliminada.'
+}
+
+# La marca indica soporte de consulta, NO que exista una versión nueva.
+fuente_actualizacion() {
+    local f=$1 value
+    value=$("$f" --appimage-updateinformation 2>/dev/null | head -n1) || :
+    case "$value" in
+        gh-releases-zsync\|*) printf 'github|%s' "$value" ;;
+        zsync\|*) printf 'zsync|%s' "$value" ;;
+        *) printf 'none|' ;;
+    esac
+}
+
+actualizaciones() {
+    local -a files=() sources=()
+    local f data kind details n option failed=0
+    while IFS= read -r -d '' f; do files+=("$f"); done < <(listar_rutas)
+    ((${#files[@]})) || { info 'No hay AppImages en ~/Aplicaciones.'; return 0; }
+    ui_clear; ui_header
+    section 'Fuentes de actualización'
+    info '✓ = consulta GitHub posible   ~ = requiere herramienta externa   – = sin soporte detectado'
+    for ((n=0;n<${#files[@]};n++)); do
+        data=$(fuente_actualizacion "${files[n]}")
+        sources+=("$data")
+        kind=${data%%|*}
+        case "$kind" in
+            github) printf '  %s%2d%s  %s✓%s  %s %s(GitHub; estado sin comprobar)%s\n' "$YELLOW" "$((n+1))" "$NC" "$GREEN" "$NC" "${files[n]##*/}" "$GRAY" "$NC" ;;
+            zsync) printf '  %s%2d%s  %s~%s  %s %s(zsync; consulta no disponible)%s\n' "$YELLOW" "$((n+1))" "$NC" "$YELLOW" "$NC" "${files[n]##*/}" "$GRAY" "$NC" ;;
+            *) printf '  %s%2d%s  %s–%s  %s %s(sin fuente compatible)%s\n' "$YELLOW" "$((n+1))" "$NC" "$GRAY" "$NC" "${files[n]##*/}" "$GRAY" "$NC" ;;
+        esac
+    done
+    printf '\n'
+    ui_choice T 'Actualizar TODAS las aplicaciones compatibles'
+    ui_choice 0 'Volver'
+    printf '%s➜%s  Opción: ' "$GREEN" "$NC"
+    read -r option || return 0
+    if [[ "$option" == [tT] ]]; then
+        confirm '¿Consultar todas las fuentes GitHub compatibles?' || return 0
+        for ((n=0;n<${#files[@]};n++)); do
+            data=${sources[n]}; kind=${data%%|*}; details=${data#*|}
+            [[ "$kind" == github ]] || continue
+            section "Actualización: ${files[n]##*/}"
+            actualizar_github "${files[n]}" "$details" || ((failed+=1))
+        done
+        ((failed==0)) || warn "$failed consulta(s) o actualización(es) fallaron."
+    elif [[ "$option" =~ ^[0-9]+$ ]] && ((option>=1 && option<=${#files[@]})); then
+        n=$((option-1)); data=${sources[n]}; kind=${data%%|*}; details=${data#*|}
+        case "$kind" in
+            github) actualizar_github "${files[n]}" "$details" ;;
+            zsync) info 'La fuente zsync requiere un actualizador compatible; no se descarga automáticamente.' ;;
+            *) info 'Esta AppImage no declara una fuente de actualización compatible.' ;;
+        esac
+    fi
+}
+
+# Implementación limitada y conservadora: GH releases -> activo .AppImage con patrón
+# vinculado al .zsync declarado. Requiere curl y python3 YA presentes en el equipo.
+actualizar_github() {
+    local file=$1 upd=$2 kind owner repo tag pattern extra json url name dest temp checksum_current checksum_new
+    IFS='|' read -r kind owner repo tag pattern extra <<< "$upd"
+    if [[ -n "${extra:-}" || ! "$owner" =~ ^[[:alnum:]_-]+$ || ! "$repo" =~ ^[[:alnum:]_.-]+$ ]]; then
+        error 'Metadatos de actualización inválidos.'; return 1
+    fi
+    if ! comando_disponible curl || ! comando_disponible python3; then
+        info 'Para consultar GitHub se necesita curl y python3 ya instalados. No se instalará nada.'; return 0
+    fi
+    # Solo acepta el alias latest o un tag simple (sin URL ni rutas).
+    [[ "$tag" =~ ^[[:alnum:]_.-]+$ ]] || { error 'Tag no válido'; return 1; }
+    local api="https://api.github.com/repos/$owner/$repo/releases"
+    if [[ "$tag" == latest ]]; then api+='/latest'; else api+="/tags/$tag"; fi
+    json=$(curl -fsSL --connect-timeout 10 --max-time 30 -H 'Accept: application/vnd.github+json' "$api") || { error 'No se pudo consultar GitHub.'; return 1; }
+    # Elegir assets usando el patrón .zsync embebido: mismo patrón, sin .zsync.
+    # El matching fnmatch evita capturar un paquete de otra arquitectura.
+    url=$(printf '%s' "$json" | python3 -c '
+import sys,json,fnmatch
+try:
+ d=json.load(sys.stdin); pattern=sys.argv[1]
+ if not pattern.endswith(".zsync"): sys.exit(0)
+ target=pattern[:-6]
+ matches=[a for a in d.get("assets",[]) if fnmatch.fnmatchcase(a.get("name",""),target) and a.get("name","").lower().endswith(".appimage")]
+ if len(matches)==1:
+  u=matches[0].get("browser_download_url","")
+  if u.startswith("https://github.com/"): print(u)
+except (ValueError,KeyError): pass
+' "$pattern")
+    [[ -n "$url" ]] || { info 'No se encontró un único AppImage compatible en esa release.'; return 0; }
+    name=${url##*/}
+    info "Archivo publicado: $name"
+    info "Origen: $url"
+    confirm '¿Descargar y comparar con el archivo actual?' || return 0
+    temp=$(mktemp "$APP_DIR/.appimage-download.XXXXXXXX") || return 1
+    if ! curl -fL --connect-timeout 15 --max-time 1200 --retry 2 --output "$temp" "$url"; then
+        rm -f -- "$temp"; error 'Falló la descarga'; return 1
+    fi
+    [[ -s "$temp" ]] || { rm -f -- "$temp"; error 'Descarga vacía'; return 1; }
+    checksum_current=$(sha256sum "$file" | cut -d' ' -f1)
+    checksum_new=$(sha256sum "$temp" | cut -d' ' -f1)
+    if [[ "$checksum_current" == "$checksum_new" ]]; then
+        rm -f -- "$temp"; info 'Ya tenés la misma versión (SHA-256 idéntico).'; return 0
+    fi
+    info 'El archivo remoto es distinto. No se verificó una firma criptográfica del editor.'
+    if ! confirm '¿Reemplazar la AppImage actual por la descargada?'; then rm -f -- "$temp"; return 0; fi
+    chmod u+x -- "$temp"
+    # Conservar el nombre local evita romper lanzadores existentes.
+    # Copia de respaldo de la versión anterior, solo durante la sustitución.
+    if ! mv -- "$file" "$file.backup"; then rm -f -- "$temp"; return 1; fi
+    if mv -- "$temp" "$file"; then
+        rm -f -- "$file.backup"
+        ok 'Actualizada. Recomiendo reparar el lanzador si cambió el icono o nombre.'
+    else
+        mv -- "$file.backup" "$file" || error "Restauración manual necesaria: $file.backup"
+        return 1
+    fi
+}
+
+main() {
+    preparar_entorno || { error 'No se pudo preparar el entorno'; exit 1; }
+    local op
+    while :; do
+        ui_clear
+        ui_header
+        ui_choice 1 'Agregar / escanear AppImages'
+        ui_choice 2 'Listar y ejecutar aplicaciones'
+        ui_choice 3 'Buscar actualizaciones'
+        ui_choice 4 'Reparar / crear lanzador'
+        ui_choice 5 'Eliminar aplicación'
+        printf '\n'
+        ui_choice 0 'Salir'
+        printf '%s──────────────────────────────────────────────────%s\n' "$GRAY" "$NC"
+        printf '%s➜%s  Opción: ' "$GREEN" "$NC"
+        read -r op || break
+        case "$op" in
+            1) agregar ;; 2) ejecutar ;; 3) actualizaciones ;; 4) reparar ;; 5) eliminar ;;
+            0) break ;; *) error 'Opción inválida' ;;
+        esac
+        pause
+    done
+}
+main "$@"
